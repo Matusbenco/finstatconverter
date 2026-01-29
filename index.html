@@ -10,179 +10,151 @@
 
     <style>
         :root {
-            --primary: #6366f1; /* Indigo */
-            --primary-dark: #4338ca;
-            --secondary: #0f172a; /* Slate 900 */
-            --bg-app: #f1f5f9;
-            --card-bg: #ffffff;
+            --primary: #6366f1;
+            --secondary: #0f172a;
+            --bg-app: #f8fafc;
             --text-main: #1e293b;
             --text-light: #64748b;
             --success: #10b981;
             --border-radius: 16px;
         }
 
-        body { margin: 0; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-app); color: var(--text-main); }
         * { box-sizing: border-box; }
 
-        /* --- 1. UPLOAD OBRAZOVKA (MODERN DARK THEME) --- */
+        /* --- UPLOAD SCREEN --- */
         .intro-screen {
             position: fixed; inset: 0;
             background: radial-gradient(circle at top right, #4338ca, #0f172a 40%, #020617);
             color: white; z-index: 1000;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
-
-        .intro-content {
-            text-align: center; max-width: 600px; padding: 40px;
-            animation: fadeIn 1s ease-out;
-        }
-
-        h1 { 
-            font-family: 'Outfit', sans-serif; font-size: 3.5rem; margin: 0; 
-            background: linear-gradient(to right, #818cf8, #c084fc); 
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            font-weight: 800; letter-spacing: -1px;
-        }
-
-        .subtitle {
-            font-size: 1.1rem; color: #94a3b8; margin: 15px 0 40px 0; line-height: 1.6;
+            transition: transform 0.6s ease;
         }
 
         .drop-zone {
-            background: rgba(255, 255, 255, 0.05);
-            border: 2px dashed rgba(255, 255, 255, 0.2);
-            border-radius: 20px; padding: 40px;
-            cursor: pointer; transition: all 0.3s;
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.05); border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 20px; padding: 40px; cursor: pointer; margin-top: 40px; transition: 0.3s;
         }
-        
-        .drop-zone:hover { 
-            background: rgba(255, 255, 255, 0.1); 
-            border-color: #818cf8; 
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px -10px rgba(99, 102, 241, 0.3);
-        }
+        .drop-zone:hover { border-color: #818cf8; transform: translateY(-5px); }
 
-        .footer-sig {
-            position: absolute; bottom: 30px; font-size: 0.8rem; color: rgba(255,255,255,0.3);
-        }
+        h1 { font-family: 'Outfit', sans-serif; font-size: 3.5rem; margin: 0; background: linear-gradient(to right, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; letter-spacing: -1px; }
 
-        /* --- 2. APLIKÁCIA (CLEAN LIGHT THEME) --- */
-        .app-screen {
-            display: none; min-height: 100vh; background: var(--bg-app); padding-bottom: 50px;
-        }
+        /* --- APP SCREEN --- */
+        .app-screen { display: none; min-height: 100vh; padding-bottom: 50px; }
 
         header {
-            background: white; padding: 15px 40px; border-bottom: 1px solid #e2e8f0;
+            background: white; padding: 20px 5%; border-bottom: 1px solid #e2e8f0;
             position: sticky; top: 0; z-index: 100;
-            display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px;
+            box-shadow: 0 4px 15px -5px rgba(0,0,0,0.05);
         }
 
-        .brand { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.2rem; color: var(--secondary); display: flex; align-items: center; gap: 10px; }
-        .brand span { color: var(--primary); }
+        .brand { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.5rem; background: linear-gradient(90deg, #2563eb, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
         .search-bar input {
-            background: #f8fafc; border: 1px solid #e2e8f0; padding: 10px 20px;
-            border-radius: 10px; width: 350px; transition: 0.2s; font-family: 'Inter', sans-serif;
+            background: #f1f5f9; border: 1px solid #e2e8f0; padding: 12px 20px;
+            border-radius: 12px; width: 100%; min-width: 400px; font-family: 'Inter', sans-serif;
+            transition: 0.2s; font-size: 1rem;
         }
         .search-bar input:focus { outline: none; border-color: var(--primary); background: white; box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1); }
 
-        /* GRID */
         .container { max-width: 1600px; margin: 40px auto; padding: 0 30px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 25px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 30px; }
 
-        /* KARTIČKA */
+        /* --- CARD --- */
         .card {
-            background: white; border-radius: var(--border-radius);
-            border: 1px solid #f1f5f9;
-            padding: 25px;
-            display: flex; flex-direction: column; gap: 15px;
+            background: white; border-radius: var(--border-radius); border: 1px solid #e2e8f0;
+            padding: 30px; display: flex; flex-direction: column; gap: 20px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-            position: relative; overflow: hidden;
+            transition: all 0.3s ease; position: relative; overflow: hidden;
         }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.1); border-color: #cbd5e1; z-index: 10; }
 
-        .card:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); border-color: #e2e8f0; }
-
-        /* STAV: VYBAVENÉ */
+        /* VYBAVENÉ (NEZMIZNE, LEN ZOSIVIE) */
         .card.done {
-            background: #f8fafc; opacity: 0.7; 
+            background: #f8fafc; 
+            opacity: 0.6; 
+            filter: grayscale(1);
             border: 1px dashed #cbd5e1;
-            /* Filter grayscale je príliš silný, len to zosivíme opacitou */
         }
-        
-        .card.done .c-name {
-            text-decoration: line-through; color: #94a3b8;
-        }
-
+        .card.done .c-name { text-decoration: line-through; color: #94a3b8; }
         .card.done::before {
-            content: "VYBAVENÉ";
-            position: absolute; top: 20px; right: -30px; background: #cbd5e1; color: white;
+            content: "VYBAVENÉ"; position: absolute; top: 20px; right: -30px; background: #cbd5e1; color: white;
             padding: 5px 40px; transform: rotate(45deg); font-size: 0.7rem; font-weight: bold; pointer-events: none;
         }
 
-        /* Obsah karty */
-        .c-header h2 { margin: 0 0 5px 0; font-size: 1.25rem; color: var(--secondary); font-family: 'Outfit', sans-serif; }
+        /* HEADER KARTY */
+        .c-header h2 { margin: 0 0 12px 0; font-size: 1.4rem; color: var(--secondary); font-family: 'Outfit', sans-serif; line-height: 1.4; }
         
-        .badges { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
-        .tag { font-size: 0.75rem; padding: 4px 10px; border-radius: 6px; font-weight: 600; text-transform: uppercase; }
+        .badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 5px; }
+        .tag { font-size: 0.8rem; padding: 6px 12px; border-radius: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
         .t-loc { background: #f1f5f9; color: #636e72; }
-        .t-seg { background: #e0e7ff; color: #4338ca; } /* Modrá pre odvetvie */
-        .t-emp { background: #fff7ed; color: #c2410c; } /* Oranžová pre zamestnancov */
+        .t-ico { background: #f1f5f9; color: #64748b; font-family: monospace; }
+        .t-seg { background: #e0e7ff; color: #4338ca; } 
+        .t-emp { background: #fff7ed; color: #c2410c; }
 
-        /* Financie */
+        /* FINANCIE */
         .finance-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 10px; 
-            background: #f8fafc; padding: 10px; border-radius: 10px; margin-bottom: 10px;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: #e2e8f0;
+            border-radius: 12px; overflow: hidden; margin-bottom: 10px; border: 1px solid #e2e8f0;
         }
-        .fin-item { display: flex; flex-direction: column; }
-        .fin-label { font-size: 0.7rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; }
-        .fin-val { font-weight: 700; font-size: 0.95rem; color: var(--secondary); }
+        .fin-item { background: #f8fafc; padding: 15px 20px; display: flex; flex-direction: column; gap: 5px; }
+        .fin-label { font-size: 0.75rem; color: #94a3b8; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
+        .fin-val { font-weight: 700; font-size: 1.1rem; color: var(--secondary); white-space: nowrap; }
         .fin-val.green { color: #166534; }
         .fin-val.red { color: #dc2626; }
 
-        .info-row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; font-size: 0.95rem; }
-        .icon { color: #94a3b8; width: 20px; text-align: center; }
-        .val { font-weight: 500; color: var(--text-main); word-break: break-word; }
+        /* ÚDAJE */
+        .data-rows { display: flex; flex-direction: column; gap: 15px; margin-top: 5px; }
+        .row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding-bottom: 8px; border-bottom: 1px solid #f1f5f9; }
+        .row:last-child { border-bottom: none; }
+        
+        .row-left { display: flex; align-items: center; gap: 12px; overflow: hidden; flex: 1; }
+        .icon { color: #94a3b8; font-size: 1.2rem; min-width: 24px; text-align: center; }
+        .val { font-weight: 500; color: var(--text-main); font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        
+        /* OSOBA - VIAC RIADKOV */
+        .val-person { display: flex; flex-direction: column; gap: 2px; }
+        .person-item { display: block; font-weight: 600; color: var(--secondary); }
 
-        /* Akcie */
-        .actions { margin-top: auto; padding-top: 15px; border-top: 1px solid #f1f5f9; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        
-        .btn {
-            border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.9rem;
-            display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; text-decoration: none;
+        .btn-copy { background: #f1f5f9; border: none; cursor: pointer; color: #2563eb; padding: 8px 12px; border-radius: 8px; font-size: 1rem; transition: 0.2s; }
+        .btn-copy:hover { background: #dbeafe; transform: scale(1.1); }
+
+        /* POZNÁMKA */
+        .note-area { margin-top: 15px; }
+        .note-input {
+            width: 100%; border: 1px solid #e2e8f0; background: #fff;
+            border-radius: 10px; padding: 12px; font-family: 'Inter', sans-serif; font-size: 0.9rem;
+            resize: vertical; min-height: 60px; transition: 0.2s; color: var(--text-main);
         }
+        .note-input:focus { outline: none; border-color: var(--primary); background: white; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); }
+        .note-label { font-size: 0.75rem; color: #94a3b8; margin-bottom: 6px; display: block; font-weight: 700; text-transform: uppercase; }
+
+        /* ACTIONS */
+        .actions { margin-top: auto; padding-top: 25px; border-top: 1px solid #f1f5f9; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .btn { border: none; padding: 14px; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 0.95rem; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; text-decoration: none; }
         
-        /* Tlačidlo Vybaviť */
         .btn-check { background: white; border: 1px solid #cbd5e1; color: var(--text-main); }
         .btn-check:hover { background: #f8fafc; border-color: var(--text-light); }
-        
-        /* Po vybavení */
-        .card.done .btn-check { 
-            background: #f1f5f9; color: #94a3b8; border-color: #e2e8f0; 
-        }
+        .card.done .btn-check { background: #dcfce7; color: #166534; border-color: #86efac; }
 
-        /* Tlačidlo Web */
         .btn-web { background: #eff6ff; color: var(--primary); }
         .btn-web:hover { background: #e0e7ff; }
         .btn-google { background: #fff7ed; color: #c2410c; }
         .btn-google:hover { background: #ffedd5; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        #toast { visibility: hidden; background-color: #1e293b; color: #fff; text-align: center; border-radius: 8px; padding: 12px 24px; position: fixed; z-index: 999; left: 50%; bottom: 30px; transform: translateX(-50%); font-size: 0.95rem; font-weight: 500; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        #toast.show { visibility: visible; animation: fadein 0.3s, fadeout 0.3s 2.5s; }
+        @keyframes fadein { from {bottom: 10px; opacity: 0;} to {bottom: 30px; opacity: 1;} }
+        @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 10px; opacity: 0;} }
     </style>
 </head>
 <body>
 
     <div class="intro-screen" id="introScreen">
-        <div class="intro-content">
-            <h1>FINSTAT<br>CONTACT CONVERTER</h1>
-            <p class="subtitle">
-                Transformuj nudný Excel na moderný Sales Dashboard.<br>
-                Rýchle vyhľadávanie, správa hovorov a Google integrácia.
-            </p>
-
+        <div style="text-align:center; max-width:600px; padding:40px; animation: fadeIn 1s;">
+            <h1>FINSTAT CONTACT CONVERTER</h1>
+            <p style="color: #cbd5e1; margin-top: 15px; font-size: 1.1rem;">Moderný nástroj pre správu leadov</p>
             <div class="drop-zone" id="dropZone">
                 <div style="font-size: 3rem; margin-bottom: 10px;">📂</div>
                 <div style="font-weight: 600; font-size: 1.2rem;">Nahrajte export z Finstatu</div>
@@ -190,40 +162,41 @@
             </div>
             <input type="file" id="fileInput" accept=".xlsx,.csv" style="display:none">
         </div>
-
-        <div class="footer-sig">Vytvoril: Matúš Benčo, 2026</div>
+        <div style="position:absolute; bottom:30px; font-size:0.8rem; color:rgba(255,255,255,0.3);">Vytvoril: Matúš Benčo, 2026</div>
     </div>
 
     <div class="app-screen" id="appScreen">
         <header>
-            <div class="brand">
-                ⚡ FINSTAT <span>CONVERTER</span>
-            </div>
+            <div class="brand">FINSTAT <span>CONTACT CONVERTER</span></div>
             <div class="search-bar">
-                <input type="text" id="searchInput" placeholder="🔍 Hľadať firmu, mesto, IČO...">
+                <input type="text" id="searchInput" placeholder="🔍 Hľadať firmu, konateľa, mesto, IČO...">
             </div>
-            <div style="font-size:0.9rem; font-weight:600; color:#64748b;">
-                Firiem: <span id="count" style="color:var(--primary)">0</span>
+            <div style="text-align:right; font-size:0.9rem; font-weight:600; color:#64748b; line-height:1.4;">
+                <span style="color:var(--secondary); font-size:1.1rem;" id="count">0</span> firiem<br>
+                <span style="color:var(--success); font-size:0.85rem;">Vybavené: <span id="doneCount">0</span></span>
             </div>
         </header>
 
         <div class="container">
             <div class="grid" id="grid"></div>
+            <div style="text-align:center; padding:40px; color:#94a3b8; font-size:0.8rem;">Vytvoril: Matúš Benčo, 2026</div>
         </div>
     </div>
 
+    <div id="toast">Skopírované!</div>
+
 <script>
-    /* --- DATA STATE MANAGEMENT --- */
     let allData = [];
-    let filteredData = []; 
+    let filteredData = [];
+    let doneCounter = 0;
 
     const introScreen = document.getElementById('introScreen');
     const appScreen = document.getElementById('appScreen');
     const dropZone = document.getElementById('dropZone');
     const fileInput = document.getElementById('fileInput');
     const grid = document.getElementById('grid');
+    const toast = document.getElementById('toast');
 
-    // Drag & Drop Handlers
     dropZone.addEventListener('click', () => fileInput.click());
     dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.style.background = "rgba(255,255,255,0.15)"; });
     dropZone.addEventListener('dragleave', e => { dropZone.style.background = "rgba(255,255,255,0.05)"; });
@@ -232,7 +205,6 @@
 
     function handleFile(file) {
         if(!file) return;
-        
         const reader = new FileReader();
         reader.onload = (e) => {
             const data = new Uint8Array(e.target.result);
@@ -243,15 +215,49 @@
         reader.readAsArrayBuffer(file);
     }
 
+    function formatNumber(num) {
+        if (!num) return 'N/A';
+        let clean = String(num).replace(/[^0-9.-]/g, '');
+        let n = parseFloat(clean);
+        if (isNaN(n)) return num;
+        return n.toLocaleString('sk-SK').replace(/,/g, ' ');
+    }
+
+    function formatPhone(str) {
+        if (!str) return '';
+        let clean = str.replace(/[^\d+]/g, '');
+        if(clean.startsWith('+421')) return clean.replace(/(\+421)(\d{3})(\d{3})(\d{3})/, '$1 $2 $3 $4');
+        if(clean.length === 10) return clean.replace(/(\d{4})(\d{3})(\d{3})/, '$1 $2 $3');
+        return str;
+    }
+
+    // Čistič mien štatutárov (odstráni adresu)
+    function cleanPersonName(rawStr) {
+        if (!rawStr) return "";
+        // Finstat často používa formát "Meno Priezvisko, Ulica 123, Mesto"
+        // Ak je viac osôb, sú často oddelené bodkočiarkou alebo novým riadkom?
+        // SheetJS to zvyčajne hodí do jednej bunky. 
+        
+        // Rozdelíme podľa bodkočiarky (ak je viac osôb)
+        let persons = rawStr.split(';'); 
+        
+        // Pre každú osobu zoberieme len časť pred prvou čiarkou
+        let cleanedNames = persons.map(p => {
+            let parts = p.split(',');
+            return parts[0].trim(); // Prvá časť je meno
+        });
+
+        // Vrátime HTML zoznam
+        return cleanedNames.filter(n => n.length > 2).map(n => `<span class="person-item">${n}</span>`).join('');
+    }
+
     function processData(json) {
         allData = json.map((row, index) => {
-            // Helper na bezpečné čítanie (case insensitive)
             const get = (k) => {
                 const found = Object.keys(row).find(key => key.toLowerCase().includes(k.toLowerCase()));
                 return found ? String(row[found]).trim() : "";
             };
 
-            // Agregácia kontaktov
             let phones = new Set();
             let emails = new Set();
             let webs = new Set();
@@ -260,13 +266,11 @@
                 const val = String(row[key]).trim();
                 const k = key.toLowerCase();
                 if(val.length < 3 || val.toLowerCase() === 'nie') return;
-
                 if (k.includes('tel') || k.includes('mobil')) phones.add(val);
                 if (k.includes('mail')) emails.add(val);
                 if (k.includes('web') || k.includes('url')) webs.add(val);
             });
 
-            // Základné údaje
             const name = get('názov') || get('obchodné meno') || "Neznáma firma";
             const city = get('mesto') || get('obec') || "";
             const district = get('okres') || "";
@@ -274,10 +278,12 @@
             const employees = get('počet zamestnancov') || get('zamestnanci') || "";
             const revenue = get('tržby') || get('obrat') || "";
             const profit = get('zisk') || "";
-            const person = get('štatutár') || get('konateľ') || get('osoba') || "";
             const ico = get('ičo');
+            
+            // Spracovanie štatutára
+            const personRaw = get('štatutár') || get('konateľ') || get('osoba') || "";
+            const personHtml = cleanPersonName(personRaw); // Očistené mená
 
-            // Web logika
             let webUrl = Array.from(webs)[0] || "";
             let hasWeb = false;
             let googleLink = `https://www.google.com/search?q=${encodeURIComponent(name + " " + city + " kontakt")}`;
@@ -289,45 +295,52 @@
 
             return {
                 id: index, 
-                name, city, district, segment, employees, 
-                revenue, profit, person, ico,
-                phone: Array.from(phones).join(', '),
-                email: Array.from(emails).join(', '),
+                name, city, district, segment, employees, revenue, profit, 
+                personHtml, personRaw, // Raw pre search, Html pre display
+                ico,
+                phone: Array.from(phones)[0] || "", 
+                email: Array.from(emails)[0] || "",
                 webUrl, hasWeb, googleLink,
-                isDone: false // Stav vybavenia
+                isDone: false,
+                note: "" 
             };
         });
 
-        filteredData = [...allData]; // Inicializácia filtra
+        filteredData = [...allData];
         render();
-        
-        // Animácia prechodu
         introScreen.style.transform = "translateY(-100%)";
         appScreen.style.display = "block";
     }
 
-    // --- HLAVNÁ LOGIKA RENDEROVANIA ---
+    window.updateNote = function(id, value) {
+        const item = allData.find(x => x.id === id);
+        if(item) item.note = value;
+    }
+
     function render() {
         grid.innerHTML = "";
         document.getElementById('count').textContent = filteredData.length;
+        document.getElementById('doneCount').textContent = doneCounter;
 
-        // Renderujeme 300 položiek pre výkon
+        // Renderujeme dáta v poradí ako sú (žiadny sort, aby neskákali)
+        // Obmedzíme na prvých 300 pre výkon
         const visible = filteredData.slice(0, 300);
 
         visible.forEach(item => {
             const card = document.createElement('div');
-            // Trieda 'done' ak je vybavené
             card.className = `card ${item.isDone ? 'done' : ''}`;
             
-            // Logika farieb pre čísla
             const isProfitPos = item.profit && !item.profit.includes('-');
-            
+            const prettyRev = formatNumber(item.revenue);
+            const prettyProf = formatNumber(item.profit);
+            const prettyPhone = formatPhone(item.phone);
+
             card.innerHTML = `
                 <div class="c-header">
                     <h2 class="c-name">${item.name}</h2>
-                    <div class="tags">
+                    <div class="badges">
                         <span class="tag t-loc">📍 ${item.city}${item.district ? ', ' + item.district : ''}</span>
-                        ${item.ico ? `<span class="tag t-loc">🆔 ${item.ico}</span>` : ''}
+                        ${item.ico ? `<span class="tag t-ico">IČO: ${item.ico}</span>` : ''}
                         ${item.segment ? `<span class="tag t-seg">🏭 ${item.segment.substring(0,30)}...</span>` : ''}
                         ${item.employees ? `<span class="tag t-emp">👥 ${item.employees}</span>` : ''}
                     </div>
@@ -336,24 +349,43 @@
                 <div class="finance-grid">
                     <div class="fin-item">
                         <span class="fin-label">Tržby</span>
-                        <span class="fin-val">${item.revenue || 'N/A'}</span>
+                        <span class="fin-val">${prettyRev} €</span>
                     </div>
                     <div class="fin-item">
                         <span class="fin-label">Zisk</span>
-                        <span class="fin-val ${isProfitPos ? 'green' : 'red'}">${item.profit || 'N/A'}</span>
+                        <span class="fin-val ${isProfitPos ? 'green' : 'red'}">${prettyProf} €</span>
                     </div>
                 </div>
 
                 <div class="data-rows">
-                    ${item.person ? `<div class="info-row"><div class="icon">👤</div><div class="val">${item.person}</div></div>` : ''}
-                    <div class="info-row">
-                        <div class="icon">📞</div>
-                        <div class="val">${item.phone || '<span style="opacity:0.4">---</span>'}</div>
+                    ${item.personHtml ? `
+                    <div class="row">
+                        <div class="row-left">
+                            <span class="icon">👤</span> 
+                            <div class="val val-person">${item.personHtml}</div>
+                        </div>
+                    </div>` : ''}
+                    
+                    <div class="row">
+                        <div class="row-left">
+                            <span class="icon">📞</span> 
+                            <span class="val">${prettyPhone || '<span style="opacity:0.4">---</span>'}</span>
+                        </div>
+                        ${item.phone ? `<button class="btn-copy" onclick="copyText('${item.phone}')" title="Kopírovať">📋</button>` : ''}
                     </div>
-                    <div class="info-row">
-                        <div class="icon">✉️</div>
-                        <div class="val">${item.email || '<span style="opacity:0.4">---</span>'}</div>
+                    
+                    <div class="row">
+                        <div class="row-left">
+                            <span class="icon">✉️</span> 
+                            <span class="val">${item.email || '<span style="opacity:0.4">---</span>'}</span>
+                        </div>
+                        ${item.email ? `<button class="btn-copy" onclick="copyText('${item.email}')" title="Kopírovať">📋</button>` : ''}
                     </div>
+                </div>
+
+                <div class="note-area">
+                    <span class="note-label">Poznámka</span>
+                    <textarea class="note-input" placeholder="..." oninput="updateNote(${item.id}, this.value)">${item.note}</textarea>
                 </div>
 
                 <div class="actions">
@@ -371,34 +403,50 @@
         });
     }
 
-    // --- PREPÍNANIE STAVU ---
+    window.copyText = function(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            toast.className = "show";
+            setTimeout(() => toast.className = "", 2000);
+        });
+    };
+
     window.toggleStatus = function(id) {
-        // Nájdi v hlavných dátach
         const index = allData.findIndex(x => x.id === id);
         if (index !== -1) {
-            allData[index].isDone = !allData[index].isDone;
+            // Zmeníme stav
+            const newState = !allData[index].isDone;
+            allData[index].isDone = newState;
             
-            // Nájdi v aktuálne filtrovaných dátach
+            // Aktualizujeme počítadlo
+            if(newState) doneCounter++; else doneCounter--;
+            
+            // Nájdeme filter index (ak sme vo vyhľadávaní)
             const fIndex = filteredData.findIndex(x => x.id === id);
             if(fIndex !== -1) {
-                filteredData[fIndex].isDone = allData[index].isDone;
+                filteredData[fIndex].isDone = newState;
             }
-            
-            // Prekresli UI
+
+            // NEPREKRESLÍME CELÝ GRID (aby to neskákalo), len upravíme DOM
+            // Nájdeme kartu podľa tlačidla alebo ID? 
+            // Najistejšie je prejsť grid alebo re-renderovať len túto jednu kartu,
+            // ale keďže chceme zmeniť triedu, spravíme re-render bez zmeny poradia.
             render();
         }
     };
 
-    // --- SEARCH ---
     document.getElementById('searchInput').addEventListener('input', (e) => {
         const val = e.target.value.toLowerCase();
         filteredData = allData.filter(d => 
             d.name.toLowerCase().includes(val) || 
             d.city.toLowerCase().includes(val) || 
-            d.person.toLowerCase().includes(val)
+            d.personRaw.toLowerCase().includes(val) // Hľadáme aj v surovom mene (s adresou)
         );
         render();
     });
+
+    const styleSheet = document.createElement("style");
+    styleSheet.innerText = `@keyframes fadeIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }`;
+    document.head.appendChild(styleSheet);
 
 </script>
 </body>
