@@ -23,7 +23,7 @@
         body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-app); color: var(--text-main); }
         * { box-sizing: border-box; }
 
-        /* --- UPLOAD SCREEN --- */
+        /* --- INTRO --- */
         .intro-screen {
             position: fixed; inset: 0;
             background: radial-gradient(circle at top right, #4338ca, #0f172a 40%, #020617);
@@ -31,16 +31,14 @@
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             transition: transform 0.6s ease;
         }
-
         .drop-zone {
             background: rgba(255, 255, 255, 0.05); border: 2px dashed rgba(255, 255, 255, 0.2);
             border-radius: 20px; padding: 40px; cursor: pointer; margin-top: 40px; transition: 0.3s;
         }
         .drop-zone:hover { border-color: #818cf8; transform: translateY(-5px); }
-
         h1 { font-family: 'Outfit', sans-serif; font-size: 3.5rem; margin: 0; background: linear-gradient(to right, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; letter-spacing: -1px; }
 
-        /* --- APP SCREEN --- */
+        /* --- APP --- */
         .app-screen { display: none; min-height: 100vh; padding-bottom: 50px; }
 
         header {
@@ -49,23 +47,16 @@
             display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px;
             box-shadow: 0 4px 15px -5px rgba(0,0,0,0.05);
         }
-
         .brand { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.4rem; background: linear-gradient(90deg, #2563eb, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-
         .search-bar input {
             background: #f1f5f9; border: 1px solid #e2e8f0; padding: 10px 15px;
             border-radius: 10px; width: 100%; min-width: 350px; font-family: 'Inter', sans-serif;
             transition: 0.2s; font-size: 0.95rem;
         }
         .search-bar input:focus { outline: none; border-color: var(--primary); background: white; box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1); }
-
-        .header-actions { display: flex; align-items: center; gap: 15px; }
         
-        .btn-reset {
-            background: #fee2e2; color: var(--danger); border: none; padding: 8px 12px; 
-            border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.8rem;
-            transition: 0.2s; display: flex; align-items: center; gap: 5px;
-        }
+        .header-actions { display: flex; align-items: center; gap: 15px; }
+        .btn-reset { background: #fee2e2; color: var(--danger); border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.8rem; transition: 0.2s; }
         .btn-reset:hover { background: #fecaca; }
 
         .container { max-width: 1600px; margin: 30px auto; padding: 0 20px; }
@@ -80,10 +71,7 @@
         }
         .card:hover { transform: translateY(-5px); box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.1); border-color: #cbd5e1; z-index: 10; }
 
-        /* VYBAVENÉ */
-        .card.done {
-            background: #f8fafc; opacity: 0.6; filter: grayscale(1); border: 1px dashed #cbd5e1;
-        }
+        .card.done { background: #f8fafc; opacity: 0.6; filter: grayscale(1); border: 1px dashed #cbd5e1; }
         .card.done .c-name { text-decoration: line-through; color: #94a3b8; }
         .card.done::before {
             content: "VYBAVENÉ"; position: absolute; top: 20px; right: -30px; background: #cbd5e1; color: white;
@@ -99,7 +87,7 @@
         .t-seg { background: #e0e7ff; color: #4338ca; } 
         .t-emp { background: #fff7ed; color: #c2410c; }
 
-        /* FINANCIE */
+        /* FINANCE */
         .finance-grid {
             display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: #e2e8f0;
             border-radius: 10px; overflow: hidden; margin-bottom: 8px; border: 1px solid #e2e8f0;
@@ -110,22 +98,37 @@
         .fin-val.green { color: #166534; }
         .fin-val.red { color: #dc2626; }
 
-        /* ÚDAJE */
-        .data-rows { display: flex; flex-direction: column; gap: 10px; margin-top: 5px; }
-        .row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding-bottom: 6px; border-bottom: 1px solid #f1f5f9; }
+        /* CONTACTS - STACKED LAYOUT */
+        .data-section { display: flex; flex-direction: column; gap: 5px; margin-top: 5px; }
+        
+        .row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 6px 0; border-bottom: 1px solid #f1f5f9; }
         .row:last-child { border-bottom: none; }
         
         .row-left { display: flex; align-items: center; gap: 10px; overflow: hidden; flex: 1; }
         .icon { color: #94a3b8; font-size: 1.1rem; min-width: 20px; text-align: center; }
         .val { font-weight: 500; color: var(--text-main); font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         
-        .val-person { display: flex; flex-direction: column; gap: 2px; font-size: 0.95rem; }
-        .person-item { display: block; font-weight: 600; color: var(--secondary); }
-
-        .btn-copy { background: #f1f5f9; border: none; cursor: pointer; color: #2563eb; padding: 6px 10px; border-radius: 6px; font-size: 0.9rem; transition: 0.2s; }
+        .btn-copy { background: #f1f5f9; border: none; cursor: pointer; color: #2563eb; padding: 4px 8px; border-radius: 6px; font-size: 0.8rem; transition: 0.2s; }
         .btn-copy:hover { background: #dbeafe; transform: scale(1.1); }
 
-        /* POZNÁMKA */
+        /* DROPDOWN AREA */
+        .hidden-stack { 
+            display: none; 
+            flex-direction: column; 
+            gap: 0px; 
+            background: #fdfdfd;
+            border-radius: 8px;
+            margin-top: 5px;
+        }
+        .hidden-stack.show { display: flex; }
+
+        .expand-btn {
+            width: 100%; background: none; border: none; color: var(--primary); font-weight: 600; font-size: 0.8rem;
+            cursor: pointer; padding: 8px; text-align: center; border-top: 1px dashed #e2e8f0; margin-top: 2px; transition: 0.2s;
+        }
+        .expand-btn:hover { background: #eff6ff; }
+
+        /* NOTES */
         .note-area { margin-top: 10px; }
         .note-input {
             width: 100%; border: 1px solid #e2e8f0; background: #fff;
@@ -181,9 +184,7 @@
                     <span style="color:var(--secondary); font-size:1rem;" id="count">0</span> firiem<br>
                     <span style="color:var(--success);">Vybavené: <span id="doneCount">0</span></span>
                 </div>
-                <button class="btn-reset" onclick="resetApp()" title="Vymazať dáta a začať odznova">
-                    🗑️ Reset
-                </button>
+                <button class="btn-reset" onclick="resetApp()" title="Vymazať dáta a začať odznova">🗑️ Reset</button>
             </div>
         </header>
 
@@ -198,8 +199,7 @@
 <script>
     let allData = [];
     let filteredData = [];
-    let doneCounter = 0;
-
+    
     const introScreen = document.getElementById('introScreen');
     const appScreen = document.getElementById('appScreen');
     const dropZone = document.getElementById('dropZone');
@@ -207,37 +207,31 @@
     const grid = document.getElementById('grid');
     const toast = document.getElementById('toast');
 
-    // --- NAČÍTANIE Z PAMÄTE PRI ŠTARTE ---
     window.onload = function() {
-        const savedData = localStorage.getItem('finstatData');
+        const savedData = localStorage.getItem('finstatDataV13');
         if (savedData) {
             try {
                 const parsed = JSON.parse(savedData);
                 if (parsed && parsed.length > 0) {
                     allData = parsed;
-                    console.log("Dáta načítané z LocalStorage");
                     initApp();
                 }
-            } catch (e) {
-                console.error("Chyba pri načítaní uložených dát", e);
-            }
+            } catch (e) { console.error(e); }
         }
     };
 
-    // --- UKLADANIE DO PAMÄTE ---
     function saveData() {
-        localStorage.setItem('finstatData', JSON.stringify(allData));
+        localStorage.setItem('finstatDataV13', JSON.stringify(allData));
         updateStats();
     }
 
     function resetApp() {
-        if(confirm("Naozaj chcete vymazať všetky dáta a začať odznova?")) {
-            localStorage.removeItem('finstatData');
+        if(confirm("Naozaj chcete vymazať dáta?")) {
+            localStorage.removeItem('finstatDataV13');
             location.reload();
         }
     }
 
-    // Drag & Drop
     dropZone.addEventListener('click', () => fileInput.click());
     dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.style.background = "rgba(255,255,255,0.15)"; });
     dropZone.addEventListener('dragleave', e => { dropZone.style.background = "rgba(255,255,255,0.05)"; });
@@ -256,30 +250,33 @@
         reader.readAsArrayBuffer(file);
     }
 
+    // --- UTILS ---
     function cleanPersonName(rawStr) {
-        if (!rawStr) return "";
+        if (!rawStr) return [];
         let persons = rawStr.split(';'); 
-        let cleanedNames = persons.map(p => {
-            let parts = p.split(',');
-            return parts[0].trim();
-        });
-        return cleanedNames.filter(n => n.length > 2).map(n => `<span class="person-item">${n}</span>`).join('');
+        return persons.map(p => p.split(',')[0].trim()).filter(n => n.length > 2);
     }
 
-    function formatNumber(num) {
+    function formatMoney(num) {
         if (!num) return 'N/A';
-        let clean = String(num).replace(/[^0-9.-]/g, '');
+        let clean = String(num).replace(/\s/g, '').replace(',', '.');
         let n = parseFloat(clean);
         if (isNaN(n)) return num;
-        return n.toLocaleString('sk-SK').replace(/,/g, ' ');
+        return n.toLocaleString('sk-SK').replace(/,/g, ' '); 
     }
 
     function formatPhone(str) {
         if (!str) return '';
         let clean = str.replace(/[^\d+]/g, '');
-        if(clean.startsWith('+421')) return clean.replace(/(\+421)(\d{3})(\d{3})(\d{3})/, '$1 $2 $3 $4');
-        if(clean.length === 10) return clean.replace(/(\d{4})(\d{3})(\d{3})/, '$1 $2 $3');
+        if (clean.length === 10 && clean.startsWith('02')) return clean.replace(/(\d{2})(\d{3})(\d{3})(\d{2})/, '$1 $2 $3 $4');
+        if (clean.length === 10 && clean.startsWith('0')) return clean.replace(/(\d{3})(\d{3})(\d{2})(\d{2})/, '$1 $2 $3 $4'); 
+        if (clean.length === 10 && clean.startsWith('09')) return clean.replace(/(\d{4})(\d{3})(\d{3})/, '$1 $2 $3');
+        if (clean.startsWith('+421')) return clean.replace(/(\+421)(\d{3})(\d{3})(\d{3})/, '$1 $2 $3 $4');
         return str;
+    }
+
+    function isValidEmail(email) {
+        return email.includes('@') && email.length < 50 && !email.includes(' ');
     }
 
     function processData(json) {
@@ -297,8 +294,19 @@
                 const val = String(row[key]).trim();
                 const k = key.toLowerCase();
                 if(val.length < 3 || val.toLowerCase() === 'nie') return;
-                if (k.includes('tel') || k.includes('mobil')) phones.add(val);
-                if (k.includes('mail')) emails.add(val);
+
+                if (k.includes('tel') || k.includes('mobil')) {
+                    val.split(/[;,]+/).forEach(v => {
+                        const cleanV = v.trim();
+                        if(cleanV.length > 3) phones.add(cleanV);
+                    });
+                }
+                if (k.includes('mail')) { 
+                    val.split(/[;,]+/).forEach(v => {
+                        const cleanV = v.trim();
+                        if(isValidEmail(cleanV)) emails.add(cleanV);
+                    });
+                }
                 if (k.includes('web') || k.includes('url')) webs.add(val);
             });
 
@@ -312,13 +320,14 @@
             const ico = get('ičo');
             
             const personRaw = get('štatutár') || get('konateľ') || get('osoba') || "";
-            const personHtml = cleanPersonName(personRaw);
+            const persons = cleanPersonName(personRaw);
 
-            let webUrl = Array.from(webs)[0] || "";
+            let rawWebUrl = Array.from(webs)[0] || "";
+            let webUrl = rawWebUrl.split(/[;, ]+/)[0]; 
             let hasWeb = false;
             let googleLink = `https://www.google.com/search?q=${encodeURIComponent(name + " " + city + " kontakt")}`;
 
-            if (webUrl && !webUrl.includes('@')) {
+            if (webUrl && !webUrl.includes('@') && webUrl.length > 3) {
                 if (!webUrl.startsWith('http')) webUrl = 'http://' + webUrl;
                 hasWeb = true;
             }
@@ -326,9 +335,9 @@
             return {
                 id: index, 
                 name, city, district, segment, employees, revenue, profit, 
-                personHtml, personRaw, ico,
-                phone: Array.from(phones)[0] || "", 
-                email: Array.from(emails)[0] || "",
+                persons, personRaw, ico,
+                phones: Array.from(phones), 
+                emails: Array.from(emails),
                 webUrl, hasWeb, googleLink,
                 isDone: false,
                 note: "" 
@@ -336,7 +345,7 @@
         });
 
         initApp();
-        saveData(); // Uložíme hneď po načítaní
+        saveData();
     }
 
     function initApp() {
@@ -348,34 +357,84 @@
     }
 
     function updateStats() {
-        doneCounter = allData.filter(x => x.isDone).length;
+        const doneCount = allData.filter(x => x.isDone).length;
         document.getElementById('count').textContent = filteredData.length;
-        document.getElementById('doneCount').textContent = doneCounter;
+        document.getElementById('doneCount').textContent = doneCount;
     }
 
     window.updateNote = function(id, value) {
         const item = allData.find(x => x.id === id);
-        if(item) {
-            item.note = value;
-            saveData(); // Uložiť pri každej zmene poznámky
-        }
+        if(item) { item.note = value; saveData(); }
     }
+
+    // --- HTML GENERATORS ---
+    function createRowHtml(value, icon, formatter, copy = false) {
+        const displayVal = formatter ? formatter(value) : value;
+        return `
+            <div class="row">
+                <div class="row-left">
+                    <span class="icon">${icon}</span> 
+                    <span class="val">${displayVal}</span>
+                </div>
+                ${copy ? `<button class="btn-copy" onclick="copyText('${value}')" title="Kopírovať">📋</button>` : ''}
+            </div>
+        `;
+    }
+
+    function renderExpandableList(items, icon, formatter, copy = false) {
+        if (!items || items.length === 0) return '';
+
+        // LIMIT ZMENENÝ NA 4
+        const VISIBLE_LIMIT = 4;
+
+        // Ak je 4 a menej, zobraz všetky
+        if (items.length <= VISIBLE_LIMIT) {
+            return items.map(item => createRowHtml(item, icon, formatter, copy)).join('');
+        }
+
+        // Ak je viac ako 4
+        const visibleItems = items.slice(0, VISIBLE_LIMIT).map(item => createRowHtml(item, icon, formatter, copy)).join('');
+        const hiddenItems = items.slice(VISIBLE_LIMIT).map(item => createRowHtml(item, icon, formatter, copy)).join('');
+        const uid = Math.random().toString(36).substr(2, 9);
+        
+        return `
+            ${visibleItems}
+            <div id="hidden-${uid}" class="hidden-stack">
+                ${hiddenItems}
+            </div>
+            <button class="expand-btn" onclick="toggleStack('${uid}', this, ${items.length - VISIBLE_LIMIT})">
+                ⬇ Zobraziť ďalšie (${items.length - VISIBLE_LIMIT})
+            </button>
+        `;
+    }
+
+    window.toggleStack = function(uid, btn, count) {
+        const div = document.getElementById('hidden-' + uid);
+        if (div.classList.contains('show')) {
+            div.classList.remove('show');
+            btn.innerHTML = `⬇ Zobraziť ďalšie (${count})`;
+        } else {
+            div.classList.add('show');
+            btn.innerHTML = `⬆ Skryť`;
+        }
+    };
 
     function render() {
         grid.innerHTML = "";
-        
-        // Zobrazíme dáta tak ako sú (bez sortovania, aby neskákali)
-        // Obmedzíme na 300
         const visible = filteredData.slice(0, 300);
 
         visible.forEach(item => {
             const card = document.createElement('div');
             card.className = `card ${item.isDone ? 'done' : ''}`;
             
-            const isProfitPos = item.profit && !item.profit.includes('-');
-            const prettyRev = formatNumber(item.revenue);
-            const prettyProf = formatNumber(item.profit);
-            const prettyPhone = formatPhone(item.phone);
+            const isProfitPos = item.profit && !String(item.profit).includes('-');
+            const prettyRev = formatMoney(item.revenue);
+            const prettyProf = formatMoney(item.profit);
+
+            // Generovanie sekcií
+            const personsHtml = renderExpandableList(item.persons, '👤', null, false);
+            const phonesHtml = renderExpandableList(item.phones, '📞', formatPhone, true);
+            const emailsHtml = renderExpandableList(item.emails, '✉️', null, true);
 
             card.innerHTML = `
                 <div class="c-header">
@@ -399,30 +458,10 @@
                     </div>
                 </div>
 
-                <div class="data-rows">
-                    ${item.personHtml ? `
-                    <div class="row">
-                        <div class="row-left">
-                            <span class="icon">👤</span> 
-                            <div class="val val-person">${item.personHtml}</div>
-                        </div>
-                    </div>` : ''}
-                    
-                    <div class="row">
-                        <div class="row-left">
-                            <span class="icon">📞</span> 
-                            <span class="val">${prettyPhone || '<span style="opacity:0.4">---</span>'}</span>
-                        </div>
-                        ${item.phone ? `<button class="btn-copy" onclick="copyText('${item.phone}')" title="Kopírovať">📋</button>` : ''}
-                    </div>
-                    
-                    <div class="row">
-                        <div class="row-left">
-                            <span class="icon">✉️</span> 
-                            <span class="val">${item.email || '<span style="opacity:0.4">---</span>'}</span>
-                        </div>
-                        ${item.email ? `<button class="btn-copy" onclick="copyText('${item.email}')" title="Kopírovať">📋</button>` : ''}
-                    </div>
+                <div class="data-section">
+                    ${personsHtml}
+                    ${phonesHtml}
+                    ${emailsHtml}
                 </div>
 
                 <div class="note-area">
@@ -456,13 +495,11 @@
         const index = allData.findIndex(x => x.id === id);
         if (index !== -1) {
             allData[index].isDone = !allData[index].isDone;
-            saveData(); // Uložiť zmenu stavu
+            saveData();
             
-            // Sync filter
             const fIndex = filteredData.findIndex(x => x.id === id);
             if(fIndex !== -1) filteredData[fIndex].isDone = allData[index].isDone;
             
-            // Re-render (len update triedy by bol efektívnejší, ale render je safe)
             render();
             updateStats();
         }
