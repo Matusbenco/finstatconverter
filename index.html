@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FINSTAT CONTACT CONVERTER</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #6366f1; /* Indigo */
+            --primary-dark: #4338ca;
+            --secondary: #0f172a; /* Slate 900 */
+            --bg-app: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-light: #64748b;
+            --success: #10b981;
+            --border-radius: 16px;
+        }
+
+        body { margin: 0; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        * { box-sizing: border-box; }
+
+        /* --- 1. UPLOAD OBRAZOVKA (MODERN DARK THEME) --- */
+        .intro-screen {
+            position: fixed; inset: 0;
+            background: radial-gradient(circle at top right, #4338ca, #0f172a 40%, #020617);
+            color: white; z-index: 1000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .intro-content {
+            text-align: center; max-width: 600px; padding: 40px;
+            animation: fadeIn 1s ease-out;
+        }
+
+        h1 { 
+            font-family: 'Outfit', sans-serif; font-size: 3.5rem; margin: 0; 
+            background: linear-gradient(to right, #818cf8, #c084fc); 
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            font-weight: 800; letter-spacing: -1px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem; color: #94a3b8; margin: 15px 0 40px 0; line-height: 1.6;
+        }
+
+        .drop-zone {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 20px; padding: 40px;
+            cursor: pointer; transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+        
+        .drop-zone:hover { 
+            background: rgba(255, 255, 255, 0.1); 
+            border-color: #818cf8; 
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px -10px rgba(99, 102, 241, 0.3);
+        }
+
+        .footer-sig {
+            position: absolute; bottom: 30px; font-size: 0.8rem; color: rgba(255,255,255,0.3);
+        }
+
+        /* --- 2. APLIKÁCIA (CLEAN LIGHT THEME) --- */
+        .app-screen {
+            display: none; min-height: 100vh; background: var(--bg-app); padding-bottom: 50px;
+        }
+
+        header {
+            background: white; padding: 15px 40px; border-bottom: 1px solid #e2e8f0;
+            position: sticky; top: 0; z-index: 100;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .brand { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.2rem; color: var(--secondary); display: flex; align-items: center; gap: 10px; }
+        .brand span { color: var(--primary); }
+
+        .search-bar input {
+            background: #f8fafc; border: 1px solid #e2e8f0; padding: 10px 20px;
+            border-radius: 10px; width: 350px; transition: 0.2s; font-family: 'Inter', sans-serif;
+        }
+        .search-bar input:focus { outline: none; border-color: var(--primary); background: white; box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1); }
+
+        /* GRID */
+        .container { max-width: 1600px; margin: 40px auto; padding: 0 30px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 25px; }
+
+        /* KARTIČKA */
+        .card {
+            background: white; border-radius: var(--border-radius);
+            border: 1px solid #f1f5f9;
+            padding: 25px;
+            display: flex; flex-direction: column; gap: 15px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            position: relative; overflow: hidden;
+        }
+
+        .card:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); border-color: #e2e8f0; }
+
+        /* STAV: VYBAVENÉ */
+        .card.done {
+            background: #f8fafc; opacity: 0.7; 
+            border: 1px dashed #cbd5e1;
+            /* Filter grayscale je príliš silný, len to zosivíme opacitou */
+        }
+        
+        .card.done .c-name {
+            text-decoration: line-through; color: #94a3b8;
+        }
+
+        .card.done::before {
+            content: "VYBAVENÉ";
+            position: absolute; top: 20px; right: -30px; background: #cbd5e1; color: white;
+            padding: 5px 40px; transform: rotate(45deg); font-size: 0.7rem; font-weight: bold; pointer-events: none;
+        }
+
+        /* Obsah karty */
+        .c-header h2 { margin: 0 0 5px 0; font-size: 1.25rem; color: var(--secondary); font-family: 'Outfit', sans-serif; }
+        
+        .badges { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+        .tag { font-size: 0.75rem; padding: 4px 10px; border-radius: 6px; font-weight: 600; text-transform: uppercase; }
+        .t-loc { background: #f1f5f9; color: #636e72; }
+        .t-seg { background: #e0e7ff; color: #4338ca; } /* Modrá pre odvetvie */
+        .t-emp { background: #fff7ed; color: #c2410c; } /* Oranžová pre zamestnancov */
+
+        /* Financie */
+        .finance-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px; 
+            background: #f8fafc; padding: 10px; border-radius: 10px; margin-bottom: 10px;
+        }
+        .fin-item { display: flex; flex-direction: column; }
+        .fin-label { font-size: 0.7rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; }
+        .fin-val { font-weight: 700; font-size: 0.95rem; color: var(--secondary); }
+        .fin-val.green { color: #166534; }
+        .fin-val.red { color: #dc2626; }
+
+        .info-row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; font-size: 0.95rem; }
+        .icon { color: #94a3b8; width: 20px; text-align: center; }
+        .val { font-weight: 500; color: var(--text-main); word-break: break-word; }
+
+        /* Akcie */
+        .actions { margin-top: auto; padding-top: 15px; border-top: 1px solid #f1f5f9; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        
+        .btn {
+            border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.9rem;
+            display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; text-decoration: none;
+        }
+        
+        /* Tlačidlo Vybaviť */
+        .btn-check { background: white; border: 1px solid #cbd5e1; color: var(--text-main); }
+        .btn-check:hover { background: #f8fafc; border-color: var(--text-light); }
+        
+        /* Po vybavení */
+        .card.done .btn-check { 
+            background: #f1f5f9; color: #94a3b8; border-color: #e2e8f0; 
+        }
+
+        /* Tlačidlo Web */
+        .btn-web { background: #eff6ff; color: var(--primary); }
+        .btn-web:hover { background: #e0e7ff; }
+        .btn-google { background: #fff7ed; color: #c2410c; }
+        .btn-google:hover { background: #ffedd5; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <div class="intro-screen" id="introScreen">
+        <div class="intro-content">
+            <h1>FINSTAT<br>CONTACT CONVERTER</h1>
+            <p class="subtitle">
+                Transformuj nudný Excel na moderný Sales Dashboard.<br>
+                Rýchle vyhľadávanie, správa hovorov a Google integrácia.
+            </p>
+
+            <div class="drop-zone" id="dropZone">
+                <div style="font-size: 3rem; margin-bottom: 10px;">📂</div>
+                <div style="font-weight: 600; font-size: 1.2rem;">Nahrajte export z Finstatu</div>
+                <div style="font-size: 0.9rem; opacity: 0.7; margin-top: 5px;">.xlsx alebo .csv</div>
+            </div>
+            <input type="file" id="fileInput" accept=".xlsx,.csv" style="display:none">
+        </div>
+
+        <div class="footer-sig">Vytvoril: Matúš Benčo, 2026</div>
+    </div>
+
+    <div class="app-screen" id="appScreen">
+        <header>
+            <div class="brand">
+                ⚡ FINSTAT <span>CONVERTER</span>
+            </div>
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="🔍 Hľadať firmu, mesto, IČO...">
+            </div>
+            <div style="font-size:0.9rem; font-weight:600; color:#64748b;">
+                Firiem: <span id="count" style="color:var(--primary)">0</span>
+            </div>
+        </header>
+
+        <div class="container">
+            <div class="grid" id="grid"></div>
+        </div>
+    </div>
+
+<script>
+    /* --- DATA STATE MANAGEMENT --- */
+    let allData = [];
+    let filteredData = []; 
+
+    const introScreen = document.getElementById('introScreen');
+    const appScreen = document.getElementById('appScreen');
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const grid = document.getElementById('grid');
+
+    // Drag & Drop Handlers
+    dropZone.addEventListener('click', () => fileInput.click());
+    dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.style.background = "rgba(255,255,255,0.15)"; });
+    dropZone.addEventListener('dragleave', e => { dropZone.style.background = "rgba(255,255,255,0.05)"; });
+    dropZone.addEventListener('drop', e => { e.preventDefault(); handleFile(e.dataTransfer.files[0]); });
+    fileInput.addEventListener('change', e => handleFile(e.target.files[0]));
+
+    function handleFile(file) {
+        if(!file) return;
+        
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, {type: 'array'});
+            const json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
+            processData(json);
+        };
+        reader.readAsArrayBuffer(file);
+    }
+
+    function processData(json) {
+        allData = json.map((row, index) => {
+            // Helper na bezpečné čítanie (case insensitive)
+            const get = (k) => {
+                const found = Object.keys(row).find(key => key.toLowerCase().includes(k.toLowerCase()));
+                return found ? String(row[found]).trim() : "";
+            };
+
+            // Agregácia kontaktov
+            let phones = new Set();
+            let emails = new Set();
+            let webs = new Set();
+
+            Object.keys(row).forEach(key => {
+                const val = String(row[key]).trim();
+                const k = key.toLowerCase();
+                if(val.length < 3 || val.toLowerCase() === 'nie') return;
+
+                if (k.includes('tel') || k.includes('mobil')) phones.add(val);
+                if (k.includes('mail')) emails.add(val);
+                if (k.includes('web') || k.includes('url')) webs.add(val);
+            });
+
+            // Základné údaje
+            const name = get('názov') || get('obchodné meno') || "Neznáma firma";
+            const city = get('mesto') || get('obec') || "";
+            const district = get('okres') || "";
+            const segment = get('odvetvie') || get('nace') || get('činnosť') || "";
+            const employees = get('počet zamestnancov') || get('zamestnanci') || "";
+            const revenue = get('tržby') || get('obrat') || "";
+            const profit = get('zisk') || "";
+            const person = get('štatutár') || get('konateľ') || get('osoba') || "";
+            const ico = get('ičo');
+
+            // Web logika
+            let webUrl = Array.from(webs)[0] || "";
+            let hasWeb = false;
+            let googleLink = `https://www.google.com/search?q=${encodeURIComponent(name + " " + city + " kontakt")}`;
+
+            if (webUrl && !webUrl.includes('@')) {
+                if (!webUrl.startsWith('http')) webUrl = 'http://' + webUrl;
+                hasWeb = true;
+            }
+
+            return {
+                id: index, 
+                name, city, district, segment, employees, 
+                revenue, profit, person, ico,
+                phone: Array.from(phones).join(', '),
+                email: Array.from(emails).join(', '),
+                webUrl, hasWeb, googleLink,
+                isDone: false // Stav vybavenia
+            };
+        });
+
+        filteredData = [...allData]; // Inicializácia filtra
+        render();
+        
+        // Animácia prechodu
+        introScreen.style.transform = "translateY(-100%)";
+        appScreen.style.display = "block";
+    }
+
+    // --- HLAVNÁ LOGIKA RENDEROVANIA ---
+    function render() {
+        grid.innerHTML = "";
+        document.getElementById('count').textContent = filteredData.length;
+
+        // Renderujeme 300 položiek pre výkon
+        const visible = filteredData.slice(0, 300);
+
+        visible.forEach(item => {
+            const card = document.createElement('div');
+            // Trieda 'done' ak je vybavené
+            card.className = `card ${item.isDone ? 'done' : ''}`;
+            
+            // Logika farieb pre čísla
+            const isProfitPos = item.profit && !item.profit.includes('-');
+            
+            card.innerHTML = `
+                <div class="c-header">
+                    <h2 class="c-name">${item.name}</h2>
+                    <div class="tags">
+                        <span class="tag t-loc">📍 ${item.city}${item.district ? ', ' + item.district : ''}</span>
+                        ${item.ico ? `<span class="tag t-loc">🆔 ${item.ico}</span>` : ''}
+                        ${item.segment ? `<span class="tag t-seg">🏭 ${item.segment.substring(0,30)}...</span>` : ''}
+                        ${item.employees ? `<span class="tag t-emp">👥 ${item.employees}</span>` : ''}
+                    </div>
+                </div>
+
+                <div class="finance-grid">
+                    <div class="fin-item">
+                        <span class="fin-label">Tržby</span>
+                        <span class="fin-val">${item.revenue || 'N/A'}</span>
+                    </div>
+                    <div class="fin-item">
+                        <span class="fin-label">Zisk</span>
+                        <span class="fin-val ${isProfitPos ? 'green' : 'red'}">${item.profit || 'N/A'}</span>
+                    </div>
+                </div>
+
+                <div class="data-rows">
+                    ${item.person ? `<div class="info-row"><div class="icon">👤</div><div class="val">${item.person}</div></div>` : ''}
+                    <div class="info-row">
+                        <div class="icon">📞</div>
+                        <div class="val">${item.phone || '<span style="opacity:0.4">---</span>'}</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="icon">✉️</div>
+                        <div class="val">${item.email || '<span style="opacity:0.4">---</span>'}</div>
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button class="btn btn-check" onclick="toggleStatus(${item.id})">
+                        ${item.isDone ? '↩️ Vrátiť' : '📞 Vybaviť'}
+                    </button>
+                    
+                    <a href="${item.hasWeb ? item.webUrl : item.googleLink}" target="_blank" 
+                       class="btn ${item.hasWeb ? 'btn-web' : 'btn-google'}">
+                       ${item.hasWeb ? '🌐 Web' : '🔍 Google'}
+                    </a>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    // --- PREPÍNANIE STAVU ---
+    window.toggleStatus = function(id) {
+        // Nájdi v hlavných dátach
+        const index = allData.findIndex(x => x.id === id);
+        if (index !== -1) {
+            allData[index].isDone = !allData[index].isDone;
+            
+            // Nájdi v aktuálne filtrovaných dátach
+            const fIndex = filteredData.findIndex(x => x.id === id);
+            if(fIndex !== -1) {
+                filteredData[fIndex].isDone = allData[index].isDone;
+            }
+            
+            // Prekresli UI
+            render();
+        }
+    };
+
+    // --- SEARCH ---
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+        const val = e.target.value.toLowerCase();
+        filteredData = allData.filter(d => 
+            d.name.toLowerCase().includes(val) || 
+            d.city.toLowerCase().includes(val) || 
+            d.person.toLowerCase().includes(val)
+        );
+        render();
+    });
+
+</script>
+</body>
+</html>
