@@ -16,6 +16,7 @@
             --text-main: #1e293b;
             --text-light: #64748b;
             --success: #10b981;
+            --danger: #ef4444;
             --border-radius: 16px;
         }
 
@@ -43,39 +44,45 @@
         .app-screen { display: none; min-height: 100vh; padding-bottom: 50px; }
 
         header {
-            background: white; padding: 20px 5%; border-bottom: 1px solid #e2e8f0;
+            background: white; padding: 15px 3%; border-bottom: 1px solid #e2e8f0;
             position: sticky; top: 0; z-index: 100;
             display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px;
             box-shadow: 0 4px 15px -5px rgba(0,0,0,0.05);
         }
 
-        .brand { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.5rem; background: linear-gradient(90deg, #2563eb, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .brand { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.4rem; background: linear-gradient(90deg, #2563eb, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
         .search-bar input {
-            background: #f1f5f9; border: 1px solid #e2e8f0; padding: 12px 20px;
-            border-radius: 12px; width: 100%; min-width: 400px; font-family: 'Inter', sans-serif;
-            transition: 0.2s; font-size: 1rem;
+            background: #f1f5f9; border: 1px solid #e2e8f0; padding: 10px 15px;
+            border-radius: 10px; width: 100%; min-width: 350px; font-family: 'Inter', sans-serif;
+            transition: 0.2s; font-size: 0.95rem;
         }
         .search-bar input:focus { outline: none; border-color: var(--primary); background: white; box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1); }
 
-        .container { max-width: 1600px; margin: 40px auto; padding: 0 30px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 30px; }
+        .header-actions { display: flex; align-items: center; gap: 15px; }
+        
+        .btn-reset {
+            background: #fee2e2; color: var(--danger); border: none; padding: 8px 12px; 
+            border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.8rem;
+            transition: 0.2s; display: flex; align-items: center; gap: 5px;
+        }
+        .btn-reset:hover { background: #fecaca; }
+
+        .container { max-width: 1600px; margin: 30px auto; padding: 0 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 25px; }
 
         /* --- CARD --- */
         .card {
             background: white; border-radius: var(--border-radius); border: 1px solid #e2e8f0;
-            padding: 30px; display: flex; flex-direction: column; gap: 20px;
+            padding: 25px; display: flex; flex-direction: column; gap: 15px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
             transition: all 0.3s ease; position: relative; overflow: hidden;
         }
         .card:hover { transform: translateY(-5px); box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.1); border-color: #cbd5e1; z-index: 10; }
 
-        /* VYBAVENÉ (NEZMIZNE, LEN ZOSIVIE) */
+        /* VYBAVENÉ */
         .card.done {
-            background: #f8fafc; 
-            opacity: 0.6; 
-            filter: grayscale(1);
-            border: 1px dashed #cbd5e1;
+            background: #f8fafc; opacity: 0.6; filter: grayscale(1); border: 1px dashed #cbd5e1;
         }
         .card.done .c-name { text-decoration: line-through; color: #94a3b8; }
         .card.done::before {
@@ -83,11 +90,10 @@
             padding: 5px 40px; transform: rotate(45deg); font-size: 0.7rem; font-weight: bold; pointer-events: none;
         }
 
-        /* HEADER KARTY */
-        .c-header h2 { margin: 0 0 12px 0; font-size: 1.4rem; color: var(--secondary); font-family: 'Outfit', sans-serif; line-height: 1.4; }
+        .c-header h2 { margin: 0 0 10px 0; font-size: 1.3rem; color: var(--secondary); font-family: 'Outfit', sans-serif; line-height: 1.3; }
         
-        .badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 5px; }
-        .tag { font-size: 0.8rem; padding: 6px 12px; border-radius: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .badges { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 5px; }
+        .tag { font-size: 0.75rem; padding: 4px 10px; border-radius: 6px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
         .t-loc { background: #f1f5f9; color: #636e72; }
         .t-ico { background: #f1f5f9; color: #64748b; font-family: monospace; }
         .t-seg { background: #e0e7ff; color: #4338ca; } 
@@ -96,43 +102,42 @@
         /* FINANCIE */
         .finance-grid {
             display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: #e2e8f0;
-            border-radius: 12px; overflow: hidden; margin-bottom: 10px; border: 1px solid #e2e8f0;
+            border-radius: 10px; overflow: hidden; margin-bottom: 8px; border: 1px solid #e2e8f0;
         }
-        .fin-item { background: #f8fafc; padding: 15px 20px; display: flex; flex-direction: column; gap: 5px; }
-        .fin-label { font-size: 0.75rem; color: #94a3b8; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
-        .fin-val { font-weight: 700; font-size: 1.1rem; color: var(--secondary); white-space: nowrap; }
+        .fin-item { background: #f8fafc; padding: 10px 15px; display: flex; flex-direction: column; gap: 2px; }
+        .fin-label { font-size: 0.7rem; color: #94a3b8; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
+        .fin-val { font-weight: 700; font-size: 1rem; color: var(--secondary); white-space: nowrap; }
         .fin-val.green { color: #166534; }
         .fin-val.red { color: #dc2626; }
 
         /* ÚDAJE */
-        .data-rows { display: flex; flex-direction: column; gap: 15px; margin-top: 5px; }
-        .row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding-bottom: 8px; border-bottom: 1px solid #f1f5f9; }
+        .data-rows { display: flex; flex-direction: column; gap: 10px; margin-top: 5px; }
+        .row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding-bottom: 6px; border-bottom: 1px solid #f1f5f9; }
         .row:last-child { border-bottom: none; }
         
-        .row-left { display: flex; align-items: center; gap: 12px; overflow: hidden; flex: 1; }
-        .icon { color: #94a3b8; font-size: 1.2rem; min-width: 24px; text-align: center; }
-        .val { font-weight: 500; color: var(--text-main); font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .row-left { display: flex; align-items: center; gap: 10px; overflow: hidden; flex: 1; }
+        .icon { color: #94a3b8; font-size: 1.1rem; min-width: 20px; text-align: center; }
+        .val { font-weight: 500; color: var(--text-main); font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         
-        /* OSOBA - VIAC RIADKOV */
-        .val-person { display: flex; flex-direction: column; gap: 2px; }
+        .val-person { display: flex; flex-direction: column; gap: 2px; font-size: 0.95rem; }
         .person-item { display: block; font-weight: 600; color: var(--secondary); }
 
-        .btn-copy { background: #f1f5f9; border: none; cursor: pointer; color: #2563eb; padding: 8px 12px; border-radius: 8px; font-size: 1rem; transition: 0.2s; }
+        .btn-copy { background: #f1f5f9; border: none; cursor: pointer; color: #2563eb; padding: 6px 10px; border-radius: 6px; font-size: 0.9rem; transition: 0.2s; }
         .btn-copy:hover { background: #dbeafe; transform: scale(1.1); }
 
         /* POZNÁMKA */
-        .note-area { margin-top: 15px; }
+        .note-area { margin-top: 10px; }
         .note-input {
             width: 100%; border: 1px solid #e2e8f0; background: #fff;
-            border-radius: 10px; padding: 12px; font-family: 'Inter', sans-serif; font-size: 0.9rem;
-            resize: vertical; min-height: 60px; transition: 0.2s; color: var(--text-main);
+            border-radius: 8px; padding: 10px; font-family: 'Inter', sans-serif; font-size: 0.9rem;
+            resize: vertical; min-height: 50px; transition: 0.2s; color: var(--text-main);
         }
         .note-input:focus { outline: none; border-color: var(--primary); background: white; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); }
-        .note-label { font-size: 0.75rem; color: #94a3b8; margin-bottom: 6px; display: block; font-weight: 700; text-transform: uppercase; }
+        .note-label { font-size: 0.7rem; color: #94a3b8; margin-bottom: 4px; display: block; font-weight: 700; text-transform: uppercase; }
 
         /* ACTIONS */
-        .actions { margin-top: auto; padding-top: 25px; border-top: 1px solid #f1f5f9; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .btn { border: none; padding: 14px; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 0.95rem; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; text-decoration: none; }
+        .actions { margin-top: auto; padding-top: 20px; border-top: 1px solid #f1f5f9; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .btn { border: none; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; text-decoration: none; }
         
         .btn-check { background: white; border: 1px solid #cbd5e1; color: var(--text-main); }
         .btn-check:hover { background: #f8fafc; border-color: var(--text-light); }
@@ -154,7 +159,7 @@
     <div class="intro-screen" id="introScreen">
         <div style="text-align:center; max-width:600px; padding:40px; animation: fadeIn 1s;">
             <h1>FINSTAT CONTACT CONVERTER</h1>
-            <p style="color: #cbd5e1; margin-top: 15px; font-size: 1.1rem;">Moderný nástroj pre správu leadov</p>
+            <p style="color: #cbd5e1; margin-top: 15px; font-size: 1.1rem;">Vaše dáta sú bezpečne uložené v prehliadači.</p>
             <div class="drop-zone" id="dropZone">
                 <div style="font-size: 3rem; margin-bottom: 10px;">📂</div>
                 <div style="font-weight: 600; font-size: 1.2rem;">Nahrajte export z Finstatu</div>
@@ -171,9 +176,14 @@
             <div class="search-bar">
                 <input type="text" id="searchInput" placeholder="🔍 Hľadať firmu, konateľa, mesto, IČO...">
             </div>
-            <div style="text-align:right; font-size:0.9rem; font-weight:600; color:#64748b; line-height:1.4;">
-                <span style="color:var(--secondary); font-size:1.1rem;" id="count">0</span> firiem<br>
-                <span style="color:var(--success); font-size:0.85rem;">Vybavené: <span id="doneCount">0</span></span>
+            <div class="header-actions">
+                <div style="text-align:right; font-size:0.85rem; font-weight:600; color:#64748b; line-height:1.3;">
+                    <span style="color:var(--secondary); font-size:1rem;" id="count">0</span> firiem<br>
+                    <span style="color:var(--success);">Vybavené: <span id="doneCount">0</span></span>
+                </div>
+                <button class="btn-reset" onclick="resetApp()" title="Vymazať dáta a začať odznova">
+                    🗑️ Reset
+                </button>
             </div>
         </header>
 
@@ -197,6 +207,37 @@
     const grid = document.getElementById('grid');
     const toast = document.getElementById('toast');
 
+    // --- NAČÍTANIE Z PAMÄTE PRI ŠTARTE ---
+    window.onload = function() {
+        const savedData = localStorage.getItem('finstatData');
+        if (savedData) {
+            try {
+                const parsed = JSON.parse(savedData);
+                if (parsed && parsed.length > 0) {
+                    allData = parsed;
+                    console.log("Dáta načítané z LocalStorage");
+                    initApp();
+                }
+            } catch (e) {
+                console.error("Chyba pri načítaní uložených dát", e);
+            }
+        }
+    };
+
+    // --- UKLADANIE DO PAMÄTE ---
+    function saveData() {
+        localStorage.setItem('finstatData', JSON.stringify(allData));
+        updateStats();
+    }
+
+    function resetApp() {
+        if(confirm("Naozaj chcete vymazať všetky dáta a začať odznova?")) {
+            localStorage.removeItem('finstatData');
+            location.reload();
+        }
+    }
+
+    // Drag & Drop
     dropZone.addEventListener('click', () => fileInput.click());
     dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.style.background = "rgba(255,255,255,0.15)"; });
     dropZone.addEventListener('dragleave', e => { dropZone.style.background = "rgba(255,255,255,0.05)"; });
@@ -215,6 +256,16 @@
         reader.readAsArrayBuffer(file);
     }
 
+    function cleanPersonName(rawStr) {
+        if (!rawStr) return "";
+        let persons = rawStr.split(';'); 
+        let cleanedNames = persons.map(p => {
+            let parts = p.split(',');
+            return parts[0].trim();
+        });
+        return cleanedNames.filter(n => n.length > 2).map(n => `<span class="person-item">${n}</span>`).join('');
+    }
+
     function formatNumber(num) {
         if (!num) return 'N/A';
         let clean = String(num).replace(/[^0-9.-]/g, '');
@@ -229,26 +280,6 @@
         if(clean.startsWith('+421')) return clean.replace(/(\+421)(\d{3})(\d{3})(\d{3})/, '$1 $2 $3 $4');
         if(clean.length === 10) return clean.replace(/(\d{4})(\d{3})(\d{3})/, '$1 $2 $3');
         return str;
-    }
-
-    // Čistič mien štatutárov (odstráni adresu)
-    function cleanPersonName(rawStr) {
-        if (!rawStr) return "";
-        // Finstat často používa formát "Meno Priezvisko, Ulica 123, Mesto"
-        // Ak je viac osôb, sú často oddelené bodkočiarkou alebo novým riadkom?
-        // SheetJS to zvyčajne hodí do jednej bunky. 
-        
-        // Rozdelíme podľa bodkočiarky (ak je viac osôb)
-        let persons = rawStr.split(';'); 
-        
-        // Pre každú osobu zoberieme len časť pred prvou čiarkou
-        let cleanedNames = persons.map(p => {
-            let parts = p.split(',');
-            return parts[0].trim(); // Prvá časť je meno
-        });
-
-        // Vrátime HTML zoznam
-        return cleanedNames.filter(n => n.length > 2).map(n => `<span class="person-item">${n}</span>`).join('');
     }
 
     function processData(json) {
@@ -280,9 +311,8 @@
             const profit = get('zisk') || "";
             const ico = get('ičo');
             
-            // Spracovanie štatutára
             const personRaw = get('štatutár') || get('konateľ') || get('osoba') || "";
-            const personHtml = cleanPersonName(personRaw); // Očistené mená
+            const personHtml = cleanPersonName(personRaw);
 
             let webUrl = Array.from(webs)[0] || "";
             let hasWeb = false;
@@ -296,8 +326,7 @@
             return {
                 id: index, 
                 name, city, district, segment, employees, revenue, profit, 
-                personHtml, personRaw, // Raw pre search, Html pre display
-                ico,
+                personHtml, personRaw, ico,
                 phone: Array.from(phones)[0] || "", 
                 email: Array.from(emails)[0] || "",
                 webUrl, hasWeb, googleLink,
@@ -306,24 +335,37 @@
             };
         });
 
+        initApp();
+        saveData(); // Uložíme hneď po načítaní
+    }
+
+    function initApp() {
         filteredData = [...allData];
+        updateStats();
         render();
         introScreen.style.transform = "translateY(-100%)";
         appScreen.style.display = "block";
     }
 
+    function updateStats() {
+        doneCounter = allData.filter(x => x.isDone).length;
+        document.getElementById('count').textContent = filteredData.length;
+        document.getElementById('doneCount').textContent = doneCounter;
+    }
+
     window.updateNote = function(id, value) {
         const item = allData.find(x => x.id === id);
-        if(item) item.note = value;
+        if(item) {
+            item.note = value;
+            saveData(); // Uložiť pri každej zmene poznámky
+        }
     }
 
     function render() {
         grid.innerHTML = "";
-        document.getElementById('count').textContent = filteredData.length;
-        document.getElementById('doneCount').textContent = doneCounter;
-
-        // Renderujeme dáta v poradí ako sú (žiadny sort, aby neskákali)
-        // Obmedzíme na prvých 300 pre výkon
+        
+        // Zobrazíme dáta tak ako sú (bez sortovania, aby neskákali)
+        // Obmedzíme na 300
         const visible = filteredData.slice(0, 300);
 
         visible.forEach(item => {
@@ -413,24 +455,16 @@
     window.toggleStatus = function(id) {
         const index = allData.findIndex(x => x.id === id);
         if (index !== -1) {
-            // Zmeníme stav
-            const newState = !allData[index].isDone;
-            allData[index].isDone = newState;
+            allData[index].isDone = !allData[index].isDone;
+            saveData(); // Uložiť zmenu stavu
             
-            // Aktualizujeme počítadlo
-            if(newState) doneCounter++; else doneCounter--;
-            
-            // Nájdeme filter index (ak sme vo vyhľadávaní)
+            // Sync filter
             const fIndex = filteredData.findIndex(x => x.id === id);
-            if(fIndex !== -1) {
-                filteredData[fIndex].isDone = newState;
-            }
-
-            // NEPREKRESLÍME CELÝ GRID (aby to neskákalo), len upravíme DOM
-            // Nájdeme kartu podľa tlačidla alebo ID? 
-            // Najistejšie je prejsť grid alebo re-renderovať len túto jednu kartu,
-            // ale keďže chceme zmeniť triedu, spravíme re-render bez zmeny poradia.
+            if(fIndex !== -1) filteredData[fIndex].isDone = allData[index].isDone;
+            
+            // Re-render (len update triedy by bol efektívnejší, ale render je safe)
             render();
+            updateStats();
         }
     };
 
@@ -439,8 +473,10 @@
         filteredData = allData.filter(d => 
             d.name.toLowerCase().includes(val) || 
             d.city.toLowerCase().includes(val) || 
-            d.personRaw.toLowerCase().includes(val) // Hľadáme aj v surovom mene (s adresou)
+            d.personRaw.toLowerCase().includes(val) ||
+            (d.ico && d.ico.toString().includes(val))
         );
+        updateStats();
         render();
     });
 
