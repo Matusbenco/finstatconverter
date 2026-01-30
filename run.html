@@ -20,10 +20,59 @@
             --border-radius: 16px;
         }
 
-        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-app); color: var(--text-main); }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-app); color: var(--text-main); overflow-x: hidden; }
         * { box-sizing: border-box; }
 
-        /* --- INTRO --- */
+        /* --- 1. LOCK SCREEN (ZÁMOK) --- */
+        #lockOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #0f172a; z-index: 9999999; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: white; transition: opacity 0.5s ease;
+        }
+        .lock-box {
+            background: #1e293b; padding: 40px; border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5); text-align: center;
+            max-width: 450px; width: 90%; border: 1px solid #334155;
+        }
+        .lock-input {
+            padding: 15px; width: 100%; margin: 20px 0; border-radius: 10px;
+            border: 1px solid #475569; background: #0f172a; color: white;
+            font-size: 1.1rem; text-align: center; letter-spacing: 2px;
+            font-family: monospace; outline: none;
+        }
+        .lock-input:focus { border-color: var(--primary); }
+        .lock-btn {
+            padding: 15px 30px; background: var(--primary); color: white;
+            border: none; border-radius: 10px; font-weight: bold; cursor: pointer;
+            font-size: 1rem; width: 100%; transition: 0.2s;
+        }
+        .lock-btn:hover { background: #4f46e5; transform: scale(1.02); }
+        .lock-btn:disabled { background: #475569; cursor: not-allowed; }
+        .lock-error { color: #ef4444; margin-top: 15px; font-size: 0.9rem; display: none; }
+
+        /* --- 2. WELCOME MODAL (BANNER) --- */
+        #welcomeModal {
+            display: none; position: fixed; z-index: 1000000; left: 0; top: 0; width: 100%; height: 100%; 
+            background-color: rgba(15, 23, 42, 0.9); align-items: center; justify-content: center;
+            backdrop-filter: blur(5px); animation: fadeIn 0.4s ease;
+        }
+        .welcome-box {
+            background: white; padding: 40px; border-radius: 24px; text-align: center; 
+            max-width: 550px; width: 90%; position: relative; 
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            font-family: 'Outfit', sans-serif; color: #1e293b;
+        }
+        .welcome-btn {
+            text-decoration: none; padding: 12px 25px; border-radius: 12px; font-weight: 600; 
+            transition: 0.2s; display: inline-block; cursor: pointer; border: none; font-size: 1rem;
+        }
+        .btn-blue { background: #4f46e5; color: white; box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2); }
+        .btn-blue:hover { background: #4338ca; }
+        .btn-light { background: #eff6ff; color: #4f46e5; border: 1px solid #c7d2fe; }
+        .btn-light:hover { background: #dbeafe; }
+
+        /* --- 3. APP UI --- */
         .intro-screen {
             position: fixed; inset: 0;
             background: radial-gradient(circle at top right, #4338ca, #0f172a 40%, #020617);
@@ -38,7 +87,6 @@
         .drop-zone:hover { border-color: #818cf8; transform: translateY(-5px); }
         h1 { font-family: 'Outfit', sans-serif; font-size: 3.5rem; margin: 0; background: linear-gradient(to right, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; letter-spacing: -1px; }
 
-        /* --- APP --- */
         .app-screen { display: none; min-height: 100vh; padding-bottom: 50px; }
 
         header {
@@ -62,7 +110,7 @@
         .container { max-width: 1600px; margin: 30px auto; padding: 0 20px; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 25px; }
 
-        /* --- CARD --- */
+        /* CARD STYLES */
         .card {
             background: white; border-radius: var(--border-radius); border: 1px solid #e2e8f0;
             padding: 25px; display: flex; flex-direction: column; gap: 15px;
@@ -87,7 +135,6 @@
         .t-seg { background: #e0e7ff; color: #4338ca; } 
         .t-emp { background: #fff7ed; color: #c2410c; }
 
-        /* FINANCE */
         .finance-grid {
             display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: #e2e8f0;
             border-radius: 10px; overflow: hidden; margin-bottom: 8px; border: 1px solid #e2e8f0;
@@ -98,54 +145,30 @@
         .fin-val.green { color: #166534; }
         .fin-val.red { color: #dc2626; }
 
-        /* CONTACTS - STACKED LAYOUT */
         .data-section { display: flex; flex-direction: column; gap: 5px; margin-top: 5px; }
-        
         .row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 6px 0; border-bottom: 1px solid #f1f5f9; }
         .row:last-child { border-bottom: none; }
-        
         .row-left { display: flex; align-items: center; gap: 10px; overflow: hidden; flex: 1; }
         .icon { color: #94a3b8; font-size: 1.1rem; min-width: 20px; text-align: center; }
         .val { font-weight: 500; color: var(--text-main); font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        
         .btn-copy { background: #f1f5f9; border: none; cursor: pointer; color: #2563eb; padding: 4px 8px; border-radius: 6px; font-size: 0.8rem; transition: 0.2s; }
         .btn-copy:hover { background: #dbeafe; transform: scale(1.1); }
 
-        /* DROPDOWN AREA */
-        .hidden-stack { 
-            display: none; 
-            flex-direction: column; 
-            gap: 0px; 
-            background: #fdfdfd;
-            border-radius: 8px;
-            margin-top: 5px;
-        }
+        .hidden-stack { display: none; flex-direction: column; gap: 0px; background: #fdfdfd; border-radius: 8px; margin-top: 5px; }
         .hidden-stack.show { display: flex; }
-
-        .expand-btn {
-            width: 100%; background: none; border: none; color: var(--primary); font-weight: 600; font-size: 0.8rem;
-            cursor: pointer; padding: 8px; text-align: center; border-top: 1px dashed #e2e8f0; margin-top: 2px; transition: 0.2s;
-        }
+        .expand-btn { width: 100%; background: none; border: none; color: var(--primary); font-weight: 600; font-size: 0.8rem; cursor: pointer; padding: 8px; text-align: center; border-top: 1px dashed #e2e8f0; margin-top: 2px; transition: 0.2s; }
         .expand-btn:hover { background: #eff6ff; }
 
-        /* NOTES */
         .note-area { margin-top: 10px; }
-        .note-input {
-            width: 100%; border: 1px solid #e2e8f0; background: #fff;
-            border-radius: 8px; padding: 10px; font-family: 'Inter', sans-serif; font-size: 0.9rem;
-            resize: vertical; min-height: 50px; transition: 0.2s; color: var(--text-main);
-        }
+        .note-input { width: 100%; border: 1px solid #e2e8f0; background: #fff; border-radius: 8px; padding: 10px; font-family: 'Inter', sans-serif; font-size: 0.9rem; resize: vertical; min-height: 50px; transition: 0.2s; color: var(--text-main); }
         .note-input:focus { outline: none; border-color: var(--primary); background: white; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); }
         .note-label { font-size: 0.7rem; color: #94a3b8; margin-bottom: 4px; display: block; font-weight: 700; text-transform: uppercase; }
 
-        /* ACTIONS */
         .actions { margin-top: auto; padding-top: 20px; border-top: 1px solid #f1f5f9; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .btn { border: none; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; text-decoration: none; }
-        
         .btn-check { background: white; border: 1px solid #cbd5e1; color: var(--text-main); }
         .btn-check:hover { background: #f8fafc; border-color: var(--text-light); }
         .card.done .btn-check { background: #dcfce7; color: #166534; border-color: #86efac; }
-
         .btn-web { background: #eff6ff; color: var(--primary); }
         .btn-web:hover { background: #e0e7ff; }
         .btn-google { background: #fff7ed; color: #c2410c; }
@@ -159,56 +182,36 @@
 </head>
 <body>
 
-<script>
-(function() {
-    // 1. Skontrolujeme, či už je užívateľ overený
-    const ulozenyKluc = localStorage.getItem('moj_licencny_kluc_v1');
+    <div id="lockOverlay">
+        <div class="lock-box">
+            <div style="font-size: 50px; margin-bottom: 20px;">🔒</div>
+            <h1 style="font-size: 1.8rem; margin: 0 0 10px 0; background: none; -webkit-text-fill-color: white;">Aplikácia je zamknutá</h1>
+            <p style="color: #94a3b8; line-height: 1.6; font-size: 0.95rem;">
+                Zadajte <b>Licenčný kľúč</b> z Gumroadu.
+            </p>
+            <input type="text" id="licKey" class="lock-input" placeholder="XXXXXXXX-XXXXXXXX">
+            <button id="btnUnlock" class="lock-btn" onclick="overitGumroad()">Odomknúť aplikáciu</button>
+            <div id="msgError" class="lock-error">Neplatný kľúč.</div>
+        </div>
+    </div>
+
+    <div id="welcomeModal">
+        <div class="welcome-box">
+            <div style="font-size: 50px; margin-bottom: 15px;">🎉</div>
+            <h2 style="margin: 0 0 15px 0; font-size: 2rem; background: linear-gradient(90deg, #2563eb, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Ďakujeme za zakúpenie!</h2>
+            
+            <p style="font-size: 1.1rem; line-height: 1.6; color: #64748b; margin-bottom: 25px;">
+                Verím, že Finstat contact converter vám pomôže.<br>
+                Stačí nahrať export z Finstatu a máte k dispozícií hneď prehľadný dashboard s užitočnými funkciami.
+            </p>
     
-    // Ak nemá uložený kľúč, ukážeme mu "zámok"
-    if (!ulozenyKluc) {
-        document.write(`
-            <style>
-                body { margin: 0; font-family: sans-serif; background: #0f172a; color: white; display: flex; align-items: center; justify-content: center; height: 100vh; }
-                .lock-screen { text-align: center; background: #1e293b; padding: 40px; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); max-width: 400px; }
-                input { padding: 15px; width: 80%; margin: 20px 0; border-radius: 10px; border: 1px solid #334155; background: #0f172a; color: white; font-size: 1.1rem; text-align: center; }
-                button { padding: 15px 30px; background: #6366f1; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 1rem; transition: 0.2s; }
-                button:hover { background: #4f46e5; transform: scale(1.05); }
-            </style>
-            <div class="lock-screen">
-                <div style="font-size: 50px;">🔒</div>
-                <h1>Aplikácia je zamknutá</h1>
-                <p style="color: #94a3b8; line-height: 1.6;">
-                    Pre prístup zadajte <b>Licenčný kľúč</b>,<br>ktorý ste dostali v e-maile od Gumroadu.
-                </p>
-                <input type="text" id="licKey" placeholder="XXXXXXXX-XXXXXXXX-XXXXXXXX-XXXXXXXX">
-                <br>
-                <button onclick="overit()">Odomknúť aplikáciu</button>
+            <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                <a href="#" target="_blank" class="welcome-btn btn-light">📘 Návod na používanie</a>
+                
+                <button onclick="document.getElementById('welcomeModal').style.display='none'" class="welcome-btn btn-blue">Začať pracovať 🚀</button>
             </div>
-        `);
-        
-        // Zastavíme načítanie zvyšku stránky
-        document.close(); 
-    }
-
-    // Funkcia na overenie (Globálna, aby ju tlačidlo videlo)
-    window.overit = function() {
-        const vstup = document.getElementById('licKey').value.trim();
-        
-        // Jednoduchá kontrola formátu Gumroad kľúča (4 bloky znakov oddelené pomlčkou)
-        // Toto nie je 100% ochrana proti hackerom, ale na bežných ľudí stačí.
-        // Gumroad kľúče vyzerajú napr: 588143F2-59594917-80709428-A6E53B0B
-        const gumroadRegex = /^[A-Z0-9]{8}-[A-Z0-9]{8}-[A-Z0-9]{8}-[A-Z0-9]{8}$/i;
-
-        if (gumroadRegex.test(vstup)) {
-            localStorage.setItem('moj_licencny_kluc_v1', vstup);
-            alert("✅ Kľúč prijatý! Vitajte.");
-            location.reload(); // Obnoví stránku a pustí dnu
-        } else {
-            alert("❌ Neplatný kľúč. Skontrolujte e-mail od Gumroadu.");
-        }
-    };
-})();
-</script>
+        </div>
+    </div>
 
     <div class="intro-screen" id="introScreen">
         <div style="text-align:center; max-width:600px; padding:40px; animation: fadeIn 1s;">
@@ -248,6 +251,71 @@
     <div id="toast">Skopírované!</div>
 
 <script>
+    // --- 1. LOGIKA ZÁMKU A LICENCIE ---
+    // !!! SEM ZADAJ SVOJ GUMROAD PERMALINK !!!
+    const GUMROAD_PERMALINK = 'tvoj-produkt'; 
+
+    (function() {
+        const verifiedKey = localStorage.getItem('finstat_license_verified');
+        if (verifiedKey) {
+            document.getElementById('lockOverlay').style.display = 'none';
+        }
+    })();
+
+    async function overitGumroad() {
+        const kluc = document.getElementById('licKey').value.trim();
+        const btn = document.getElementById('btnUnlock');
+        const msg = document.getElementById('msgError');
+
+        // --- ZADNÉ VRÁTKA PRE TEBA (MASTER KEY) ---
+        if (kluc === 'START-123') {
+            localStorage.setItem('finstat_license_verified', 'admin-bypass');
+            
+            // Animácia odomknutia
+            document.getElementById('lockOverlay').style.opacity = '0';
+            setTimeout(() => { document.getElementById('lockOverlay').style.display = 'none'; }, 500);
+            
+            // Zobrazenie uvítacieho bannera
+            document.getElementById('welcomeModal').style.display = 'flex';
+            return;
+        }
+
+        if (kluc.length < 5) { msg.style.display = 'block'; msg.innerText = "Kľúč je príliš krátky"; return; }
+
+        btn.disabled = true;
+        btn.innerText = "Overujem...";
+        msg.style.display = 'none';
+
+        try {
+            const response = await fetch('https://api.gumroad.com/v2/licenses/verify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `product_permalink=${GUMROAD_PERMALINK}&license_key=${kluc}`
+            });
+            const data = await response.json();
+
+            if (data.success === true && !data.purchase.refunded) {
+                localStorage.setItem('finstat_license_verified', kluc);
+                
+                // Odomknúť
+                document.getElementById('lockOverlay').style.opacity = '0';
+                setTimeout(() => { document.getElementById('lockOverlay').style.display = 'none'; }, 500);
+                
+                // Banner
+                document.getElementById('welcomeModal').style.display = 'flex';
+            } else {
+                throw new Error("Neplatný kľúč");
+            }
+        } catch (e) {
+            console.warn("API Error:", e);
+            msg.style.display = 'block';
+            msg.innerText = "Chyba overenia. Skontrolujte kľúč.";
+            btn.disabled = false;
+            btn.innerText = "Odomknúť aplikáciu";
+        }
+    }
+
+    // --- 2. LOGIKA APLIKÁCIE ---
     let allData = [];
     let filteredData = [];
     
@@ -263,10 +331,7 @@
         if (savedData) {
             try {
                 const parsed = JSON.parse(savedData);
-                if (parsed && parsed.length > 0) {
-                    allData = parsed;
-                    initApp();
-                }
+                if (parsed && parsed.length > 0) { allData = parsed; initApp(); }
             } catch (e) { console.error(e); }
         }
     };
@@ -276,16 +341,12 @@
         updateStats();
     }
 
-    // --- HLAVNÝ RESET (Vymaže aj dáta panelu) ---
     function resetApp() {
         if(confirm("Naozaj chcete vymazať VŠETKY dáta (súbor, počítadlá, poznámky)?")) {
-            // Vymaže dáta aplikácie
             localStorage.removeItem('finstatDataV13');
-            // Vymaže dáta bočného panelu
             localStorage.removeItem('moje_skore');
             localStorage.removeItem('moje_poznamky');
-            localStorage.removeItem('moje_riadok');
-            
+            // Licenciu nemažeme, aby nemusel znova zadávať kľúč
             location.reload();
         }
     }
@@ -571,126 +632,41 @@
     styleSheet.innerText = `@keyframes fadeIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }`;
     document.head.appendChild(styleSheet);
 
-/* --- ZMENENÝ SIDEBAR (BEZ RIADKU A BEZ TLAČIDLA RESET) --- */
+/* --- SIDEBAR --- */
 (function() {
-
-    // 1. DATABÁZA HLÁŠOK
+    // KOMPLETNÝ ZOZNAM HLÁŠOK
     const hlasky = [
-"Zákazník má vždy pravdu. (Ale my vieme svoje).",
-"Ďalší hovor, ďalšia šanca... pokaziť to.",
-"Prosím, nech to dvihne sekretárka, tá je aspoň milá.",
-"Keby som dostal euro za každé 'nemám záujem', píšem vám z Bahám.",
-"Moja trpezlivosť s klientmi je ako batéria v iPhone. Rýchlo sa míňa.",
-"Dnes predávam s entuziazmom mŕtveho chrobáka.",
-"Viete, ako sa volá had, ktorý rozpráva vtipy? Hahad.",
-"Viete, prečo policajti nechodia na ryby? Lebo by zatkli prvú, čo by otvorila ústa.",
-"Rozprávajú sa dve planéty: 'Cítim sa zle.' 'Prečo?' 'Mám ľudí.' 'Neboj, to prejde.'",
-"Aký je najrýchlejší spôsob, ako zarobiť peniaze? Predať budík.",
-"Viete, čo robí hluchý matematik? Počíta s tým, že nič nebude počuť.",
-"Prečo má datateľka studené ruky? Lebo má Windows otvorený dokorán.",
-"Viete, ako sa hovorí človeku, ktorý všade vidí tváre? Facebook.",
-"Príde kostlivec k lekárovi. Lekár: 'No, to idete pekne skoro!'",
-"Viete, čo vznikne skrížením ježa a dážďovky? Ostnatý drôt.",
-"Jeden vtáčik hovorí druhému: 'Prepáč, ponáhľam sa, musím si ísť dobiť baterky.' (Konšpiračná teória).",
-"Umelá inteligencia nemá šancu proti prirodzenej hlúposti.",
-"Káva nie je droga. Je to vitamín C(offee).",
-"Nekrič na mňa, kým nemám v ruke kávu. A potom už vôbec nie, lebo mám zbraň.",
-"Dnes fungujem na nízkom napätí.",
-"Môj mozog má dnes 'Blue Screen of Death'.",
-"Zívnutie je tichý výkrik po kofeíne.",
-"Dnes by som potreboval kávu veľkosti vedra.",
-"V mojom tele je 70% vody a 30% zúfalstva.",
-"Práca ma baví. Dokážem sa na ňu pozerať celé hodiny.",
-"Môj šéf mi povedal, aby som mal pekný deň. Tak som išiel domov.",
-"Tímová práca je dôležitá. Umožňuje ti zvaliť vinu na niekoho iného.",
-"Dnes mám náladu 'Error 404'.",
-"E-mail odoslaný. Teraz čakám na potlesk.",
-"Moja úroveň stresu je momentálne: 'Nepýtaj sa'.",
-"Prepáčte, že meškám, ale nechcelo sa mi prísť.",
-"Mám to v 'TO-DO' liste. Hneď za 'ovládnuť svet' a 'kúpiť mlieko'.",
-"Všetko sa dá urobiť zajtra. Aj to, čo sa malo urobiť včera.",
-"Som taký zaneprázdnený, že neviem, čo skôr nerobiť.",
-"Moja kariéra je ako horská dráha. Lenže ideme len dole.",
-"Viete, ako sa hovorí bumerangu, ktorý sa nevráti? Palica.",
-"Prečo sa potápači hádžu do vody dozadu? Lebo dopredu by spadli do lode.",
-"Pesimista vidí tmu. Optimista vidí svetlo. Realista vidí, že horí.",
-"Viete, čo má spoločné programátor a kúzelník? Obaja robia triky, ktorým nikto nerozumie.",
-"Manželka hovorí mužovi: 'Drahý, tie lieky ti vôbec nepomáhajú.' Muž: 'Aké lieky?' Manželka: 'Tie, čo ti predpísali proti skleróze.' Muž: 'Mne niekto niečo predpísal?'",
-"Viete, prečo blondínka polieva počítač? Chce surfovať na nete.",
-"Idú dve paradajky cez cestu. Jednu prejde auto a druhá hovorí: 'Poď, kečup, ideme ďalej.'",
-"Aký je rozdiel medzi vedomosťou a múdrosťou? Vedomosť je vedieť, že paradajka je ovocie. Múdrosť je nedať si ju do ovocného šalátu.",
-"Hovorí sa, že peniaze nie sú všetko. A je to pravda. Ešte sú tu aj nehnuteľnosti a akcie.",
-"Trpezlivosť ruže prináša. Ale nervy nosia whisky.",
-"Nič nerobenie je veľmi ťažká vec. Nikdy nevieš, kedy si skončil.",
-"Dnes sa mi nechce nič. A zajtra si to asi zopakujem.",
-"Excel neodpovedá. Ja tiež nie.",
-"Vesmír má nekonečne veľa dimenzií, ale Excel má len 1 048 576 riadkov.",
-"Neboj sa, AI ťa nenahradí. Nahradí ťa kolega, ktorý vie používať AI.",
-"Reštartoval si to? Nie? Tak neotravuj.",
-"Klávesnica nie je na mlátenie, ale niekedy si to pýta.",
-"Uložil si to? Určite? Ulož to radšej ešte raz.",
-"Ctrl+Z je najväčší vynález ľudstva.",
-"Môj počítač si myslí, že mám čas čakať.",
-"Kofeín v krvi: 98%. Chuť pracovať: 2%.",
-"Moja krvná skupina je Káva pozitív.",
-"Najskôr káva, potom diplomacia.",
-"Dnes fungujem na kofeíne a sarkazme.",
-"Ak ma vidíš bez kávy, radšej predstieraj, že si mŕtvy.",
-"Zívnutie je tichý výkrik po káve.",
-"Dnes to vyzerá na troj-kávový problém.",
-"ASAP je len skratka pre 'Zabudol som na to a teraz horí'.",
-"Tento meeting mohol byť e-mailom. A ten e-mail som mohol vymazať.",
-"Kolegovia sú ako vianočné svetielka. Polovica nesvieti a druhá je zamotaná.",
-"Teamwork: To znamená, že to pokazíme viacerí naraz.",
-"Štvrtok je len malý piatok.",
-"Moja motivácia práve odišla na obed. Asi sa už nevráti.",
-"Tvár sa inteligentne, šéf sa pozerá.",
-"Moja superschopnosť? Viem posielať pasívne-agresívne maily.",
-"Nie som lenivý. Som v úspornom režime.",
-"Práca šľachtí človeka, ale dnešok by som radšej preskočil.",
-"Dvíhaj to! Peniaze na druhej strane čakajú.",
-"Každé 'nie' je len krok k 'áno'. Alebo k infarktu.",
-"Haló? Nie, nevolám vám kvôli predĺženej záruke na auto.",
-"Dnes mám hlas ako z reklamy na whisky. Využi to.",
-"Náš zákazník, náš pán. Aj keď niekedy je ten pán trochu mimo.",
-"Úsmev počuť aj cez telefón. Tak sa neškľab!",
-"Volám, teda som.",
-"Ak nedvihneš do 5 sekúnd, automaticky súhlasíš s objednávkou.",
-"Prosím, nech to nie je odkazová schránka...",
-"Dnes predám aj piesok na Sahare.",
-"Nie som neodbytný, som len cieľavedomý.",
-        "Dnes pracujem na 10%. Zvyšných 90% sa načítava...",
-        "Moja práca je prísne tajná. Ani ja neviem, čo robím.",
-        "Môj stôl nie je bordel. To je 'organizovaný chaos'.",
-        "Trpezlivosť nie je moja silná stránka... a už ma to začína štvať!",
-        "Deadline je moment, kedy ťa napadnú tie najlepšie výhovorky.",
-        "Ak to funguje, nechytaj to!",
-        "Plán na dnes: 1. Káva, 2. Káva, 3. Prežiť.",
-        "Mám to pod kontrolou... (asi).",
-        "Meeting mohol byť e-mailom.",
-        "Skúsil si to vypnúť a zapnúť?",
-        "To nie je chyba (bug), to je nečakaná funkcia (feature).",
-        "Ctrl+C a Ctrl+V sú moji najlepší kolegovia.",
-        "Error 404: Motivácia not found.",
-        "Volaný účastník sa momentálne venuje pitiu kávy.",
-        "Tento hovor sa nenahráva, takže si môžem uľaviť.",
-        "Život je krátky. Usmievaj sa, kým máš zuby.",
-        "Svetlo na konci tunela je len prichádzajúci vlak.",
-        "Peniaze ťa šťastným neurobia. Ale radšej budem plakať v Ferrari.",
-        "Všetko sa raz vyrieši. Väčšinou samo."
+        "Dnes pracujem na 10%. Zvyšných 90% sa načítava...", "Moja práca je prísne tajná. Ani ja neviem, čo robím.",
+        "Môj stôl nie je bordel. To je 'organizovaný chaos'.", "Trpezlivosť nie je moja silná stránka... a už ma to začína štvať!",
+        "Deadline je moment, kedy ťa napadnú tie najlepšie výhovorky.", "Ak to funguje, nechytaj to!", "Plán na dnes: 1. Káva, 2. Káva, 3. Prežiť.",
+        "Mám to pod kontrolou... (asi).", "Meeting mohol byť e-mailom.", "Skúsil si to vypnúť a zapnúť?", "To nie je chyba (bug), to je nečakaná funkcia (feature).",
+        "Ctrl+C a Ctrl+V sú moji najlepší kolegovia.", "Error 404: Motivácia not found.", "Volaný účastník sa momentálne venuje pitiu kávy.",
+        "Tento hovor sa nenahráva, takže si môžem uľaviť.", "Život je krátky. Usmievaj sa, kým máš zuby.", "Svetlo na konci tunela je len prichádzajúci vlak.",
+        "Peniaze ťa šťastným neurobia. Ale radšej budem plakať v Ferrari.", "Všetko sa raz vyrieši. Väčšinou samo.", "Dvíhaj to! Peniaze na druhej strane čakajú.",
+        "Každé 'nie' je len krok k 'áno'. Alebo k infarktu.", "Haló? Nie, nevolám vám kvôli predĺženej záruke na auto.", "Dnes mám hlas ako z reklamy na whisky. Využi to.",
+        "Náš zákazník, náš pán. Aj keď niekedy je ten pán trochu mimo.", "Úsmev počuť aj cez telefón. Tak sa neškľab!", "Volám, teda som.",
+        "Ak nedvihneš do 5 sekúnd, automaticky súhlasíš s objednávkou.", "Prosím, nech to nie je odkazová schránka...", "Dnes predám aj piesok na Sahare.",
+        "Nie som neodbytný, som len cieľavedomý.", "ASAP je len skratka pre 'Zabudol som na to a teraz horí'.", "Tento meeting mohol byť e-mailom. A ten e-mail som mohol vymazať.",
+        "Kolegovia sú ako vianočné svetielka. Polovica nesvieti a druhá je zamotaná.", "Teamwork: To znamená, že to pokazíme viacerí naraz.", "Štvrtok je len malý piatok.",
+        "Moja motivácia práve odišla na obed. Asi sa už nevráti.", "Tvár sa inteligentne, šéf sa pozerá.", "Moja superschopnosť? Viem posielať pasívne-agresívne maily.",
+        "Nie som lenivý. Som v úspornom režime.", "Práca šľachtí človeka, ale dnešok by som radšej preskočil.", "Kofeín v krvi: 98%. Chuť pracovať: 2%.",
+        "Moja krvná skupina je Káva pozitív.", "Najskôr káva, potom diplomacia.", "Dnes fungujem na kofeíne a sarkazme.", "Ak ma vidíš bez kávy, radšej predstieraj, že si mŕtvy.",
+        "Zívnutie je tichý výkrik po káve.", "Dnes to vyzerá na troj-kávový problém.", "Excel neodpovedá. Ja tiež nie.", "Vesmír má nekonečne veľa dimenzií, ale Excel má len 1 048 576 riadkov.",
+        "Neboj sa, AI ťa nenahradí. Nahradí ťa kolega, ktorý vie používať AI.", "Reštartoval si to? Nie? Tak neotravuj.", "Klávesnica nie je na mlátenie, ale niekedy si to pýta.",
+        "Uložil si to? Určite? Ulož to radšej ešte raz.", "Ctrl+Z je najväčší vynález ľudstva.", "Môj počítač si myslí, že mám čas čakať.", "Viete, ako sa hovorí bumerangu, ktorý sa nevráti? Palica.",
+        "Prečo sa potápači hádžu do vody dozadu? Lebo dopredu by spadli do lode.", "Pesimista vidí tmu. Optimista vidí svetlo. Realista vidí, že horí.", "Viete, čo má spoločné programátor a kúzelník? Obaja robia triky, ktorým nikto nerozumie.",
+        "Manželka hovorí mužovi: 'Drahý, tie lieky ti vôbec nepomáhajú.' Muž: 'Aké lieky?' Manželka: 'Tie, čo ti predpísali proti skleróze.' Muž: 'Mne niekto niečo predpísal?'",
+        "Viete, prečo blondínka polieva počítač? Chce surfovať na nete.", "Idú dve paradajky cez cestu. Jednu prejde auto a druhá hovorí: 'Poď, kečup, ideme ďalej.'",
+        "Aký je rozdiel medzi vedomosťou a múdrosťou? Vedomosť je vedieť, že paradajka je ovocie. Múdrosť je nedať si ju do ovocného šalátu.", "Hovorí sa, že peniaze nie sú všetko. A je to pravda. Ešte sú tu aj nehnuteľnosti a akcie.",
+        "Trpezlivosť ruže prináša. Ale nervy nosia whisky.", "Nič nerobenie je veľmi ťažká vec. Nikdy nevieš, kedy si skončil.", "Dnes sa mi nechce nič. A zajtra si to asi zopakujem."
     ];
 
-    // 2. HTML KÓD
     const bubbleHTML = `
         <div id="sb-bubble" style="
-            display: none; position: fixed; 
-            top: 350px; left: 160px; 
-            background: #fff; color: #333; padding: 15px; 
-            border-radius: 0 10px 10px 10px; 
-            box-shadow: 2px 5px 20px rgba(0,0,0,0.4); 
-            width: 220px; font-family: 'Segoe UI', sans-serif;
-            font-size: 13px; line-height: 1.4; text-align: left; 
-            z-index: 2147483647; border: 1px solid #ddd; cursor: pointer;
+            display: none; position: fixed; top: 350px; left: 160px; 
+            background: #fff; color: #333; padding: 15px; border-radius: 0 10px 10px 10px; 
+            box-shadow: 2px 5px 20px rgba(0,0,0,0.4); width: 220px; font-family: 'Segoe UI', sans-serif;
+            font-size: 13px; line-height: 1.4; text-align: left; z-index: 99999; border: 1px solid #ddd; cursor: pointer;
         ">
             <div style="position: absolute; left: -10px; top: 10px; width: 0; height: 0; border-top: 10px solid transparent; border-bottom: 10px solid transparent; border-right: 10px solid #fff;"></div>
             <span id="sb-bubble-text" style="font-weight: 500;"></span>
@@ -699,33 +675,14 @@
     `;
 
     const sidebarHTML = `
-        <div id="sb-restore-btn" style="
-            display: none; position: fixed; top: 20px; left: 0;
-            background: #2c3e50; color: white; padding: 10px 15px 10px 10px;
-            border-radius: 0 8px 8px 0; cursor: pointer; z-index: 99998;
-            font-family: sans-serif; font-weight: bold; font-size: 18px;
-        ">»</div>
-
-        <div id="sidebar-container" style="
-            position: fixed; top: 0; left: 0;
-            width: 150px; height: 100vh;
-            background: #2c3e50; color: #ecf0f1;
-            display: flex; flex-direction: column; align-items: center;
-            padding: 15px 10px; box-sizing: border-box;
-            font-family: 'Segoe UI', sans-serif; z-index: 99999;
-            box-shadow: 4px 0 15px rgba(0,0,0,0.1);
-            transition: left 0.3s ease;
-            overflow-y: auto;
-        ">
+        <div id="sb-restore-btn" style="display: none; position: fixed; top: 20px; left: 0; background: #2c3e50; color: white; padding: 10px 15px 10px 10px; border-radius: 0 8px 8px 0; cursor: pointer; z-index: 99998; font-family: sans-serif; font-weight: bold; font-size: 18px;">»</div>
+        <div id="sidebar-container" style="position: fixed; top: 0; left: 0; width: 150px; height: 100vh; background: #2c3e50; color: #ecf0f1; display: flex; flex-direction: column; align-items: center; padding: 15px 10px; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; z-index: 99999; box-shadow: 4px 0 15px rgba(0,0,0,0.1); transition: left 0.3s ease; overflow-y: auto;">
             <button id="sb-close-btn" style="align-self: flex-end; background: none; border: none; color: #7f8c8d; cursor: pointer; font-size: 14px; margin-bottom: 5px;">✖</button>
-
             <div style="text-align: center; margin-bottom: 15px;">
                 <div id="sb-date" style="font-size: 11px; opacity: 0.7;">--.--.</div>
                 <div id="sb-clock" style="font-size: 24px; font-weight: bold; color: #fff;">00:00</div>
             </div>
-
             <hr style="width: 80%; border: 0; border-top: 1px solid #465a6e; margin-bottom: 15px;">
-
             <div style="text-align: center; width: 100%; margin-bottom: 15px;">
                 <div style="font-size: 10px; text-transform: uppercase; opacity: 0.5; margin-bottom: 2px;">Čas hovoru</div>
                 <div id="sb-stopwatch" style="font-family: monospace; font-size: 20px; color: #3498db; margin-bottom: 5px; font-weight: bold;">00:00</div>
@@ -734,16 +691,10 @@
                     <button id="sb-btn-reset" style="flex: 1; background: transparent; border: 1px solid #7f8c8d; color: #bdc3c7; border-radius: 4px; padding: 5px; cursor: pointer; font-size: 11px;">Rst</button>
                 </div>
             </div>
-
             <div style="width: 100%; text-align: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #465a6e;">
-                <button id="sb-mood-btn" title="Vylepšiť náladu" style="
-                    background: none; border: 2px solid #8e44ad; color: #8e44ad; 
-                    border-radius: 50%; width: 40px; height: 40px; 
-                    cursor: pointer; font-size: 20px; transition: all 0.2s;
-                ">🍀</button>
+                <button id="sb-mood-btn" title="Vylepšiť náladu" style="background: none; border: 2px solid #8e44ad; color: #8e44ad; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; font-size: 20px; transition: all 0.2s;">🍀</button>
                 <div style="font-size: 10px; color: #8e44ad; margin-top: 5px;">Vylepšovák</div>
             </div>
-
             <div style="text-align: center; width: 100%; margin-bottom: 20px; background: #34495e; padding: 10px; border-radius: 8px; border: 1px solid #465a6e;">
                 <div style="font-size: 10px; text-transform: uppercase; margin-bottom: 5px; color: #f1c40f; font-weight: bold;">🏆 Úspešné</div>
                 <div id="sb-counter" style="font-size: 28px; font-weight: bold; color: #fff; line-height: 1;">0</div>
@@ -752,39 +703,23 @@
                     <button id="sb-cnt-plus" style="background: #27ae60; border: none; color: white; width: 25px; height: 25px; border-radius: 50%; cursor: pointer; font-weight: bold;">+</button>
                 </div>
             </div>
-
             <div style="width: 100%; margin-bottom: 15px; flex-grow: 1; display: flex; flex-direction: column;">
                 <div style="font-size: 10px; text-transform: uppercase; opacity: 0.5; margin-bottom: 4px; padding-left: 2px;">Rýchla poznámka</div>
-                <textarea id="sb-notepad" placeholder="Píš sem..." style="
-                    width: 100%; flex-grow: 1; 
-                    background: #34495e; /* Tmavá farba ladiaca s panelom */
-                    border: 1px solid #465a6e; /* Jemný okraj */
-                    border-radius: 6px; 
-                    padding: 10px; 
-                    font-family: 'Segoe UI', sans-serif; font-size: 12px; 
-                    color: #ecf0f1; /* Svetlé písmo */
-                    resize: none; outline: none; box-sizing: border-box;
-                    box-shadow: inset 0 2px 5px rgba(0,0,0,0.1); /* Jemný tieň do vnútra */
-                    line-height: 1.4;
-                "></textarea>
+                <textarea id="sb-notepad" placeholder="Píš sem..." style="width: 100%; flex-grow: 1; background: #34495e; border: 1px solid #465a6e; border-radius: 6px; padding: 10px; font-family: 'Segoe UI', sans-serif; font-size: 12px; color: #ecf0f1; resize: none; outline: none; box-sizing: border-box; box-shadow: inset 0 2px 5px rgba(0,0,0,0.1); line-height: 1.4;"></textarea>
             </div>
         </div>
     `;
 
-    // Vloženie
     const divPanel = document.createElement('div'); divPanel.innerHTML = sidebarHTML; document.body.appendChild(divPanel);
     const divBubble = document.createElement('div'); divBubble.innerHTML = bubbleHTML; document.body.appendChild(divBubble);
 
-    // --- LOGIKA ---
     const sidebar = document.getElementById('sidebar-container');
     const restoreBtn = document.getElementById('sb-restore-btn');
     const closeBtn = document.getElementById('sb-close-btn');
     
-    // Otváranie / Zatváranie
     restoreBtn.onclick = () => { sidebar.style.left = "0"; restoreBtn.style.display = "none"; };
     closeBtn.onclick = () => { sidebar.style.left = "-170px"; restoreBtn.style.display = "block"; };
 
-    // Hodiny
     function updateClock() {
         const now = new Date();
         document.getElementById('sb-clock').innerText = now.toLocaleTimeString('sk-SK', {hour:'2-digit', minute:'2-digit'});
@@ -792,7 +727,6 @@
     }
     setInterval(updateClock, 1000); updateClock();
 
-    // Stopky
     let seconds = 0, interval = null, isRunning = false;
     const dispStopwatch = document.getElementById('sb-stopwatch');
     const btnAction = document.getElementById('sb-btn-action');
@@ -810,18 +744,15 @@
         seconds = 0; dispStopwatch.innerText = "00:00"; dispStopwatch.style.color = "#3498db";
     };
 
-    // Počítadlo
     let count = 0; const dispCounter = document.getElementById('sb-counter');
     if(localStorage.getItem('moje_skore')) { count = parseInt(localStorage.getItem('moje_skore')); dispCounter.innerText = count; }
     document.getElementById('sb-cnt-plus').onclick = () => { count++; dispCounter.innerText = count; localStorage.setItem('moje_skore', count); };
     document.getElementById('sb-cnt-minus').onclick = () => { if(count>0) count--; dispCounter.innerText = count; localStorage.setItem('moje_skore', count); };
 
-    // Poznámky
     const notepad = document.getElementById('sb-notepad');
     if(localStorage.getItem('moje_poznamky')) { notepad.value = localStorage.getItem('moje_poznamky'); }
     notepad.oninput = function() { localStorage.setItem('moje_poznamky', notepad.value); };
 
-    // Vtipy
     const moodBtn = document.getElementById('sb-mood-btn');
     const bubble = document.getElementById('sb-bubble');
     const bubbleText = document.getElementById('sb-bubble-text');
@@ -838,7 +769,6 @@
     });
 
 })();
-/* --- KONIEC --- */
 </script>
 </body>
 </html>
