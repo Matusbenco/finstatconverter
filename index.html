@@ -184,7 +184,7 @@
                     <span style="color:var(--secondary); font-size:1rem;" id="count">0</span> firiem<br>
                     <span style="color:var(--success);">Vybavené: <span id="doneCount">0</span></span>
                 </div>
-                <button class="btn-reset" onclick="resetApp()" title="Vymazať dáta a začať odznova">🗑️ Reset</button>
+                <button class="btn-reset" onclick="resetApp()" title="Vymazať VŠETKY dáta a začať odznova">🗑️ Reset</button>
             </div>
         </header>
 
@@ -225,9 +225,16 @@
         updateStats();
     }
 
+    // --- HLAVNÝ RESET (Vymaže aj dáta panelu) ---
     function resetApp() {
-        if(confirm("Naozaj chcete vymazať dáta?")) {
+        if(confirm("Naozaj chcete vymazať VŠETKY dáta (súbor, počítadlá, poznámky)?")) {
+            // Vymaže dáta aplikácie
             localStorage.removeItem('finstatDataV13');
+            // Vymaže dáta bočného panelu
+            localStorage.removeItem('moje_skore');
+            localStorage.removeItem('moje_poznamky');
+            localStorage.removeItem('moje_riadok');
+            
             location.reload();
         }
     }
@@ -383,20 +390,13 @@
 
     function renderExpandableList(items, icon, formatter, copy = false) {
         if (!items || items.length === 0) return '';
-
-        // LIMIT ZMENENÝ NA 4
         const VISIBLE_LIMIT = 4;
-
-        // Ak je 4 a menej, zobraz všetky
         if (items.length <= VISIBLE_LIMIT) {
             return items.map(item => createRowHtml(item, icon, formatter, copy)).join('');
         }
-
-        // Ak je viac ako 4
         const visibleItems = items.slice(0, VISIBLE_LIMIT).map(item => createRowHtml(item, icon, formatter, copy)).join('');
         const hiddenItems = items.slice(VISIBLE_LIMIT).map(item => createRowHtml(item, icon, formatter, copy)).join('');
         const uid = Math.random().toString(36).substr(2, 9);
-        
         return `
             ${visibleItems}
             <div id="hidden-${uid}" class="hidden-stack">
@@ -431,7 +431,6 @@
             const prettyRev = formatMoney(item.revenue);
             const prettyProf = formatMoney(item.profit);
 
-            // Generovanie sekcií
             const personsHtml = renderExpandableList(item.persons, '👤', null, false);
             const phonesHtml = renderExpandableList(item.phones, '📞', formatPhone, true);
             const emailsHtml = renderExpandableList(item.emails, '✉️', null, true);
@@ -521,13 +520,94 @@
     styleSheet.innerText = `@keyframes fadeIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }`;
     document.head.appendChild(styleSheet);
 
-
-
-/* --- ZAČIATOK: FINÁLNY SIDEBAR (Opravená bublinka + Pozícia) --- */
+/* --- ZMENENÝ SIDEBAR (BEZ RIADKU A BEZ TLAČIDLA RESET) --- */
 (function() {
 
     // 1. DATABÁZA HLÁŠOK
     const hlasky = [
+"Zákazník má vždy pravdu. (Ale my vieme svoje).",
+"Ďalší hovor, ďalšia šanca... pokaziť to.",
+"Prosím, nech to dvihne sekretárka, tá je aspoň milá.",
+"Keby som dostal euro za každé 'nemám záujem', píšem vám z Bahám.",
+"Moja trpezlivosť s klientmi je ako batéria v iPhone. Rýchlo sa míňa.",
+"Dnes predávam s entuziazmom mŕtveho chrobáka.",
+"Viete, ako sa volá had, ktorý rozpráva vtipy? Hahad.",
+"Viete, prečo policajti nechodia na ryby? Lebo by zatkli prvú, čo by otvorila ústa.",
+"Rozprávajú sa dve planéty: 'Cítim sa zle.' 'Prečo?' 'Mám ľudí.' 'Neboj, to prejde.'",
+"Aký je najrýchlejší spôsob, ako zarobiť peniaze? Predať budík.",
+"Viete, čo robí hluchý matematik? Počíta s tým, že nič nebude počuť.",
+"Prečo má datateľka studené ruky? Lebo má Windows otvorený dokorán.",
+"Viete, ako sa hovorí človeku, ktorý všade vidí tváre? Facebook.",
+"Príde kostlivec k lekárovi. Lekár: 'No, to idete pekne skoro!'",
+"Viete, čo vznikne skrížením ježa a dážďovky? Ostnatý drôt.",
+"Jeden vtáčik hovorí druhému: 'Prepáč, ponáhľam sa, musím si ísť dobiť baterky.' (Konšpiračná teória).",
+"Umelá inteligencia nemá šancu proti prirodzenej hlúposti.",
+"Káva nie je droga. Je to vitamín C(offee).",
+"Nekrič na mňa, kým nemám v ruke kávu. A potom už vôbec nie, lebo mám zbraň.",
+"Dnes fungujem na nízkom napätí.",
+"Môj mozog má dnes 'Blue Screen of Death'.",
+"Zívnutie je tichý výkrik po kofeíne.",
+"Dnes by som potreboval kávu veľkosti vedra.",
+"V mojom tele je 70% vody a 30% zúfalstva.",
+"Práca ma baví. Dokážem sa na ňu pozerať celé hodiny.",
+"Môj šéf mi povedal, aby som mal pekný deň. Tak som išiel domov.",
+"Tímová práca je dôležitá. Umožňuje ti zvaliť vinu na niekoho iného.",
+"Dnes mám náladu 'Error 404'.",
+"E-mail odoslaný. Teraz čakám na potlesk.",
+"Moja úroveň stresu je momentálne: 'Nepýtaj sa'.",
+"Prepáčte, že meškám, ale nechcelo sa mi prísť.",
+"Mám to v 'TO-DO' liste. Hneď za 'ovládnuť svet' a 'kúpiť mlieko'.",
+"Všetko sa dá urobiť zajtra. Aj to, čo sa malo urobiť včera.",
+"Som taký zaneprázdnený, že neviem, čo skôr nerobiť.",
+"Moja kariéra je ako horská dráha. Lenže ideme len dole.",
+"Viete, ako sa hovorí bumerangu, ktorý sa nevráti? Palica.",
+"Prečo sa potápači hádžu do vody dozadu? Lebo dopredu by spadli do lode.",
+"Pesimista vidí tmu. Optimista vidí svetlo. Realista vidí, že horí.",
+"Viete, čo má spoločné programátor a kúzelník? Obaja robia triky, ktorým nikto nerozumie.",
+"Manželka hovorí mužovi: 'Drahý, tie lieky ti vôbec nepomáhajú.' Muž: 'Aké lieky?' Manželka: 'Tie, čo ti predpísali proti skleróze.' Muž: 'Mne niekto niečo predpísal?'",
+"Viete, prečo blondínka polieva počítač? Chce surfovať na nete.",
+"Idú dve paradajky cez cestu. Jednu prejde auto a druhá hovorí: 'Poď, kečup, ideme ďalej.'",
+"Aký je rozdiel medzi vedomosťou a múdrosťou? Vedomosť je vedieť, že paradajka je ovocie. Múdrosť je nedať si ju do ovocného šalátu.",
+"Hovorí sa, že peniaze nie sú všetko. A je to pravda. Ešte sú tu aj nehnuteľnosti a akcie.",
+"Trpezlivosť ruže prináša. Ale nervy nosia whisky.",
+"Nič nerobenie je veľmi ťažká vec. Nikdy nevieš, kedy si skončil.",
+"Dnes sa mi nechce nič. A zajtra si to asi zopakujem.",
+"Excel neodpovedá. Ja tiež nie.",
+"Vesmír má nekonečne veľa dimenzií, ale Excel má len 1 048 576 riadkov.",
+"Neboj sa, AI ťa nenahradí. Nahradí ťa kolega, ktorý vie používať AI.",
+"Reštartoval si to? Nie? Tak neotravuj.",
+"Klávesnica nie je na mlátenie, ale niekedy si to pýta.",
+"Uložil si to? Určite? Ulož to radšej ešte raz.",
+"Ctrl+Z je najväčší vynález ľudstva.",
+"Môj počítač si myslí, že mám čas čakať.",
+"Kofeín v krvi: 98%. Chuť pracovať: 2%.",
+"Moja krvná skupina je Káva pozitív.",
+"Najskôr káva, potom diplomacia.",
+"Dnes fungujem na kofeíne a sarkazme.",
+"Ak ma vidíš bez kávy, radšej predstieraj, že si mŕtvy.",
+"Zívnutie je tichý výkrik po káve.",
+"Dnes to vyzerá na troj-kávový problém.",
+"ASAP je len skratka pre 'Zabudol som na to a teraz horí'.",
+"Tento meeting mohol byť e-mailom. A ten e-mail som mohol vymazať.",
+"Kolegovia sú ako vianočné svetielka. Polovica nesvieti a druhá je zamotaná.",
+"Teamwork: To znamená, že to pokazíme viacerí naraz.",
+"Štvrtok je len malý piatok.",
+"Moja motivácia práve odišla na obed. Asi sa už nevráti.",
+"Tvár sa inteligentne, šéf sa pozerá.",
+"Moja superschopnosť? Viem posielať pasívne-agresívne maily.",
+"Nie som lenivý. Som v úspornom režime.",
+"Práca šľachtí človeka, ale dnešok by som radšej preskočil.",
+"Dvíhaj to! Peniaze na druhej strane čakajú.",
+"Každé 'nie' je len krok k 'áno'. Alebo k infarktu.",
+"Haló? Nie, nevolám vám kvôli predĺženej záruke na auto.",
+"Dnes mám hlas ako z reklamy na whisky. Využi to.",
+"Náš zákazník, náš pán. Aj keď niekedy je ten pán trochu mimo.",
+"Úsmev počuť aj cez telefón. Tak sa neškľab!",
+"Volám, teda som.",
+"Ak nedvihneš do 5 sekúnd, automaticky súhlasíš s objednávkou.",
+"Prosím, nech to nie je odkazová schránka...",
+"Dnes predám aj piesok na Sahare.",
+"Nie som neodbytný, som len cieľavedomý.",
         "Dnes pracujem na 10%. Zvyšných 90% sa načítava...",
         "Moja práca je prísne tajná. Ani ja neviem, čo robím.",
         "Môj stôl nie je bordel. To je 'organizovaný chaos'.",
@@ -550,26 +630,16 @@
     ];
 
     // 2. HTML KÓD
-    // A) Samostatná bublinka (aby ju nič neprekrývalo)
     const bubbleHTML = `
         <div id="sb-bubble" style="
-            display: none; /* Defaultne skryté */
-            position: fixed; 
-            top: 280px; /* Výška zarovno s tlačidlom (cca) */
-            left: 160px; /* Hneď vedľa panelu */
-            background: #fff; 
-            color: #333; 
-            padding: 15px; 
+            display: none; position: fixed; 
+            top: 350px; left: 160px; 
+            background: #fff; color: #333; padding: 15px; 
             border-radius: 0 10px 10px 10px; 
             box-shadow: 2px 5px 20px rgba(0,0,0,0.4); 
-            width: 220px; 
-            font-family: 'Segoe UI', sans-serif;
-            font-size: 13px;
-            line-height: 1.4;
-            text-align: left; 
-            z-index: 2147483647; /* Maximálna priorita */
-            border: 1px solid #ddd;
-            cursor: pointer; /* Aby bolo jasné, že sa na to dá klikať */
+            width: 220px; font-family: 'Segoe UI', sans-serif;
+            font-size: 13px; line-height: 1.4; text-align: left; 
+            z-index: 2147483647; border: 1px solid #ddd; cursor: pointer;
         ">
             <div style="position: absolute; left: -10px; top: 10px; width: 0; height: 0; border-top: 10px solid transparent; border-bottom: 10px solid transparent; border-right: 10px solid #fff;"></div>
             <span id="sb-bubble-text" style="font-weight: 500;"></span>
@@ -577,18 +647,16 @@
         </div>
     `;
 
-    // B) Panel (Sidebar)
     const sidebarHTML = `
         <div id="sb-restore-btn" style="
-            display: none; 
-            position: fixed; top: 20px; left: 0;
+            display: none; position: fixed; top: 20px; left: 0;
             background: #2c3e50; color: white; padding: 10px 15px 10px 10px;
             border-radius: 0 8px 8px 0; cursor: pointer; z-index: 99998;
             font-family: sans-serif; font-weight: bold; font-size: 18px;
         ">»</div>
 
         <div id="sidebar-container" style="
-            position: fixed; top: 0; left: 0; /* Defaultne VIDITEĽNÝ */
+            position: fixed; top: 0; left: 0;
             width: 150px; height: 100vh;
             background: #2c3e50; color: #ecf0f1;
             display: flex; flex-direction: column; align-items: center;
@@ -608,7 +676,7 @@
             <hr style="width: 80%; border: 0; border-top: 1px solid #465a6e; margin-bottom: 15px;">
 
             <div style="text-align: center; width: 100%; margin-bottom: 15px;">
-                <div style="font-size: 10px; text-transform: uppercase; opacity: 0.5; margin-bottom: 2px;">Stopky</div>
+                <div style="font-size: 10px; text-transform: uppercase; opacity: 0.5; margin-bottom: 2px;">Čas hovoru</div>
                 <div id="sb-stopwatch" style="font-family: monospace; font-size: 20px; color: #3498db; margin-bottom: 5px; font-weight: bold;">00:00</div>
                 <div style="display: flex; gap: 5px;">
                     <button id="sb-btn-action" style="flex: 1; background: #27ae60; border: none; color: white; border-radius: 4px; padding: 5px; cursor: pointer; font-weight: bold; font-size: 11px;">ŠTART</button>
@@ -634,10 +702,10 @@
                 </div>
             </div>
 
-            <div style="width: 100%; margin-bottom: auto;">
+            <div style="width: 100%; margin-bottom: 15px; flex-grow: 1; display: flex; flex-direction: column;">
                 <div style="font-size: 10px; text-transform: uppercase; opacity: 0.5; margin-bottom: 2px;">Rýchla poznámka</div>
                 <textarea id="sb-notepad" placeholder="Píš sem..." style="
-                    width: 100%; height: 80px; 
+                    width: 100%; flex-grow: 1; 
                     background: #ecf0f1; border: none; border-radius: 5px; 
                     padding: 5px; font-family: sans-serif; font-size: 11px; color: #333;
                     resize: none; outline: none; box-sizing: border-box;
@@ -646,24 +714,20 @@
         </div>
     `;
 
-    // Vloženie do stránky
-    const divPanel = document.createElement('div');
-    divPanel.innerHTML = sidebarHTML;
-    document.body.appendChild(divPanel);
+    // Vloženie
+    const divPanel = document.createElement('div'); divPanel.innerHTML = sidebarHTML; document.body.appendChild(divPanel);
+    const divBubble = document.createElement('div'); divBubble.innerHTML = bubbleHTML; document.body.appendChild(divBubble);
 
-    const divBubble = document.createElement('div');
-    divBubble.innerHTML = bubbleHTML;
-    document.body.appendChild(divBubble);
-
-    // --- 3. LOGIKA: OTVÁRANIE / ZATVÁRANIE PANELU ---
+    // --- LOGIKA ---
     const sidebar = document.getElementById('sidebar-container');
     const restoreBtn = document.getElementById('sb-restore-btn');
     const closeBtn = document.getElementById('sb-close-btn');
-
+    
+    // Otváranie / Zatváranie
     restoreBtn.onclick = () => { sidebar.style.left = "0"; restoreBtn.style.display = "none"; };
     closeBtn.onclick = () => { sidebar.style.left = "-170px"; restoreBtn.style.display = "block"; };
 
-    // --- 4. LOGIKA: ČAS ---
+    // Hodiny
     function updateClock() {
         const now = new Date();
         document.getElementById('sb-clock').innerText = now.toLocaleTimeString('sk-SK', {hour:'2-digit', minute:'2-digit'});
@@ -671,26 +735,17 @@
     }
     setInterval(updateClock, 1000); updateClock();
 
-    // --- 5. LOGIKA: STOPKY ---
+    // Stopky
     let seconds = 0, interval = null, isRunning = false;
     const dispStopwatch = document.getElementById('sb-stopwatch');
     const btnAction = document.getElementById('sb-btn-action');
-
-    function fmt(s) {
-        let m = Math.floor(s/60), sec = s%60;
-        return (m<10?"0"+m:m) + ":" + (sec<10?"0"+sec:sec);
-    }
-
+    function fmt(s) { let m = Math.floor(s/60), sec = s%60; return (m<10?"0"+m:m) + ":" + (sec<10?"0"+sec:sec); }
     btnAction.onclick = function() {
         if (!isRunning) {
             isRunning = true; btnAction.innerText = "STOP"; btnAction.style.background = "#c0392b";
-            interval = setInterval(() => {
-                seconds++; dispStopwatch.innerText = fmt(seconds);
-                if(seconds>300) dispStopwatch.style.color = "#e74c3c";
-            }, 1000);
+            interval = setInterval(() => { seconds++; dispStopwatch.innerText = fmt(seconds); if(seconds>300) dispStopwatch.style.color = "#e74c3c"; }, 1000);
         } else {
-            isRunning = false; btnAction.innerText = "ŠTART"; btnAction.style.background = "#27ae60";
-            clearInterval(interval);
+            isRunning = false; btnAction.innerText = "ŠTART"; btnAction.style.background = "#27ae60"; clearInterval(interval);
         }
     };
     document.getElementById('sb-btn-reset').onclick = function() {
@@ -698,58 +753,31 @@
         seconds = 0; dispStopwatch.innerText = "00:00"; dispStopwatch.style.color = "#3498db";
     };
 
-    // --- 6. LOGIKA: POČÍTADLO ---
-    let count = 0;
-    const dispCounter = document.getElementById('sb-counter');
+    // Počítadlo
+    let count = 0; const dispCounter = document.getElementById('sb-counter');
     if(localStorage.getItem('moje_skore')) { count = parseInt(localStorage.getItem('moje_skore')); dispCounter.innerText = count; }
+    document.getElementById('sb-cnt-plus').onclick = () => { count++; dispCounter.innerText = count; localStorage.setItem('moje_skore', count); };
+    document.getElementById('sb-cnt-minus').onclick = () => { if(count>0) count--; dispCounter.innerText = count; localStorage.setItem('moje_skore', count); };
 
-    document.getElementById('sb-cnt-plus').onclick = () => {
-        count++; dispCounter.innerText = count; localStorage.setItem('moje_skore', count); 
-    };
-    document.getElementById('sb-cnt-minus').onclick = () => {
-        if(count > 0) count--; dispCounter.innerText = count; localStorage.setItem('moje_skore', count); 
-    };
-
-    // --- 7. LOGIKA: POZNÁMKY ---
+    // Poznámky
     const notepad = document.getElementById('sb-notepad');
     if(localStorage.getItem('moje_poznamky')) { notepad.value = localStorage.getItem('moje_poznamky'); }
     notepad.oninput = function() { localStorage.setItem('moje_poznamky', notepad.value); };
 
-    // --- 8. LOGIKA: VTIPY (Opravená) ---
+    // Vtipy
     const moodBtn = document.getElementById('sb-mood-btn');
     const bubble = document.getElementById('sb-bubble');
     const bubbleText = document.getElementById('sb-bubble-text');
-
-    // Funkcia na zobrazenie nového vtipu
     function showNewJoke(e) {
-        // Zastav propagáciu, aby document.onclick hneď neskryl bublinku
         if(e) e.stopPropagation(); 
-
-        // Efekt tlačidla
-        moodBtn.style.transform = "rotate(360deg)";
-        setTimeout(() => moodBtn.style.transform = "rotate(0deg)", 300);
-
-        // Nový text
+        moodBtn.style.transform = "rotate(360deg)"; setTimeout(() => moodBtn.style.transform = "rotate(0deg)", 300);
         bubbleText.innerText = hlasky[Math.floor(Math.random() * hlasky.length)];
-        
-        // Zobrazenie
         bubble.style.display = "block";
     }
-
-    // Klik na štvorlístok
     moodBtn.onclick = showNewJoke;
-
-    // Klik na samotnú bublinku (tiež vygeneruje nový vtip)
     bubble.onclick = showNewJoke;
-
-    // Klik kdekoľvek inde na stránke (zatvorí bublinku)
     document.addEventListener('click', function(event) {
-        const isClickInsideBubble = bubble.contains(event.target);
-        const isClickOnButton = moodBtn.contains(event.target);
-
-        if (!isClickInsideBubble && !isClickOnButton) {
-            bubble.style.display = "none";
-        }
+        if (!bubble.contains(event.target) && !moodBtn.contains(event.target)) { bubble.style.display = "none"; }
     });
 
 })();
@@ -757,4 +785,3 @@
 </script>
 </body>
 </html>
-
