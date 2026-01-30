@@ -521,6 +521,239 @@
     styleSheet.innerText = `@keyframes fadeIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }`;
     document.head.appendChild(styleSheet);
 
+
+
+/* --- ZAČIATOK: FINÁLNY SIDEBAR (Opravená bublinka + Pozícia) --- */
+(function() {
+
+    // 1. DATABÁZA HLÁŠOK
+    const hlasky = [
+        "Dnes pracujem na 10%. Zvyšných 90% sa načítava...",
+        "Moja práca je prísne tajná. Ani ja neviem, čo robím.",
+        "Môj stôl nie je bordel. To je 'organizovaný chaos'.",
+        "Trpezlivosť nie je moja silná stránka... a už ma to začína štvať!",
+        "Deadline je moment, kedy ťa napadnú tie najlepšie výhovorky.",
+        "Ak to funguje, nechytaj to!",
+        "Plán na dnes: 1. Káva, 2. Káva, 3. Prežiť.",
+        "Mám to pod kontrolou... (asi).",
+        "Meeting mohol byť e-mailom.",
+        "Skúsil si to vypnúť a zapnúť?",
+        "To nie je chyba (bug), to je nečakaná funkcia (feature).",
+        "Ctrl+C a Ctrl+V sú moji najlepší kolegovia.",
+        "Error 404: Motivácia not found.",
+        "Volaný účastník sa momentálne venuje pitiu kávy.",
+        "Tento hovor sa nenahráva, takže si môžem uľaviť.",
+        "Život je krátky. Usmievaj sa, kým máš zuby.",
+        "Svetlo na konci tunela je len prichádzajúci vlak.",
+        "Peniaze ťa šťastným neurobia. Ale radšej budem plakať v Ferrari.",
+        "Všetko sa raz vyrieši. Väčšinou samo."
+    ];
+
+    // 2. HTML KÓD
+    // A) Samostatná bublinka (aby ju nič neprekrývalo)
+    const bubbleHTML = `
+        <div id="sb-bubble" style="
+            display: none; /* Defaultne skryté */
+            position: fixed; 
+            top: 280px; /* Výška zarovno s tlačidlom (cca) */
+            left: 160px; /* Hneď vedľa panelu */
+            background: #fff; 
+            color: #333; 
+            padding: 15px; 
+            border-radius: 0 10px 10px 10px; 
+            box-shadow: 2px 5px 20px rgba(0,0,0,0.4); 
+            width: 220px; 
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 13px;
+            line-height: 1.4;
+            text-align: left; 
+            z-index: 2147483647; /* Maximálna priorita */
+            border: 1px solid #ddd;
+            cursor: pointer; /* Aby bolo jasné, že sa na to dá klikať */
+        ">
+            <div style="position: absolute; left: -10px; top: 10px; width: 0; height: 0; border-top: 10px solid transparent; border-bottom: 10px solid transparent; border-right: 10px solid #fff;"></div>
+            <span id="sb-bubble-text" style="font-weight: 500;"></span>
+            <div style="margin-top:8px; font-size:10px; color:#999; text-align:right;">(Klikni pre ďalší)</div>
+        </div>
+    `;
+
+    // B) Panel (Sidebar)
+    const sidebarHTML = `
+        <div id="sb-restore-btn" style="
+            display: none; 
+            position: fixed; top: 20px; left: 0;
+            background: #2c3e50; color: white; padding: 10px 15px 10px 10px;
+            border-radius: 0 8px 8px 0; cursor: pointer; z-index: 99998;
+            font-family: sans-serif; font-weight: bold; font-size: 18px;
+        ">»</div>
+
+        <div id="sidebar-container" style="
+            position: fixed; top: 0; left: 0; /* Defaultne VIDITEĽNÝ */
+            width: 150px; height: 100vh;
+            background: #2c3e50; color: #ecf0f1;
+            display: flex; flex-direction: column; align-items: center;
+            padding: 15px 10px; box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif; z-index: 99999;
+            box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+            transition: left 0.3s ease;
+            overflow-y: auto;
+        ">
+            <button id="sb-close-btn" style="align-self: flex-end; background: none; border: none; color: #7f8c8d; cursor: pointer; font-size: 14px; margin-bottom: 5px;">✖</button>
+
+            <div style="text-align: center; margin-bottom: 15px;">
+                <div id="sb-date" style="font-size: 11px; opacity: 0.7;">--.--.</div>
+                <div id="sb-clock" style="font-size: 24px; font-weight: bold; color: #fff;">00:00</div>
+            </div>
+
+            <hr style="width: 80%; border: 0; border-top: 1px solid #465a6e; margin-bottom: 15px;">
+
+            <div style="text-align: center; width: 100%; margin-bottom: 15px;">
+                <div style="font-size: 10px; text-transform: uppercase; opacity: 0.5; margin-bottom: 2px;">Čas hovoru</div>
+                <div id="sb-stopwatch" style="font-family: monospace; font-size: 20px; color: #3498db; margin-bottom: 5px; font-weight: bold;">00:00</div>
+                <div style="display: flex; gap: 5px;">
+                    <button id="sb-btn-action" style="flex: 1; background: #27ae60; border: none; color: white; border-radius: 4px; padding: 5px; cursor: pointer; font-weight: bold; font-size: 11px;">ŠTART</button>
+                    <button id="sb-btn-reset" style="flex: 1; background: transparent; border: 1px solid #7f8c8d; color: #bdc3c7; border-radius: 4px; padding: 5px; cursor: pointer; font-size: 11px;">Rst</button>
+                </div>
+            </div>
+
+            <div style="width: 100%; text-align: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #465a6e;">
+                <button id="sb-mood-btn" title="Vylepšiť náladu" style="
+                    background: none; border: 2px solid #8e44ad; color: #8e44ad; 
+                    border-radius: 50%; width: 40px; height: 40px; 
+                    cursor: pointer; font-size: 20px; transition: all 0.2s;
+                ">🍀</button>
+                <div style="font-size: 10px; color: #8e44ad; margin-top: 5px;">Vylepšovák</div>
+            </div>
+
+            <div style="text-align: center; width: 100%; margin-bottom: 20px; background: #34495e; padding: 10px; border-radius: 8px; border: 1px solid #465a6e;">
+                <div style="font-size: 10px; text-transform: uppercase; margin-bottom: 5px; color: #f1c40f; font-weight: bold;">🏆 Úspešné</div>
+                <div id="sb-counter" style="font-size: 28px; font-weight: bold; color: #fff; line-height: 1;">0</div>
+                <div style="margin-top: 8px; display: flex; justify-content: center; gap: 10px;">
+                    <button id="sb-cnt-minus" style="background: #c0392b; border: none; color: white; width: 25px; height: 25px; border-radius: 50%; cursor: pointer; font-weight: bold;">-</button>
+                    <button id="sb-cnt-plus" style="background: #27ae60; border: none; color: white; width: 25px; height: 25px; border-radius: 50%; cursor: pointer; font-weight: bold;">+</button>
+                </div>
+            </div>
+
+            <div style="width: 100%; margin-bottom: auto;">
+                <div style="font-size: 10px; text-transform: uppercase; opacity: 0.5; margin-bottom: 2px;">Rýchla poznámka</div>
+                <textarea id="sb-notepad" placeholder="Píš sem..." style="
+                    width: 100%; height: 80px; 
+                    background: #ecf0f1; border: none; border-radius: 5px; 
+                    padding: 5px; font-family: sans-serif; font-size: 11px; color: #333;
+                    resize: none; outline: none; box-sizing: border-box;
+                "></textarea>
+            </div>
+        </div>
+    `;
+
+    // Vloženie do stránky
+    const divPanel = document.createElement('div');
+    divPanel.innerHTML = sidebarHTML;
+    document.body.appendChild(divPanel);
+
+    const divBubble = document.createElement('div');
+    divBubble.innerHTML = bubbleHTML;
+    document.body.appendChild(divBubble);
+
+    // --- 3. LOGIKA: OTVÁRANIE / ZATVÁRANIE PANELU ---
+    const sidebar = document.getElementById('sidebar-container');
+    const restoreBtn = document.getElementById('sb-restore-btn');
+    const closeBtn = document.getElementById('sb-close-btn');
+
+    restoreBtn.onclick = () => { sidebar.style.left = "0"; restoreBtn.style.display = "none"; };
+    closeBtn.onclick = () => { sidebar.style.left = "-170px"; restoreBtn.style.display = "block"; };
+
+    // --- 4. LOGIKA: ČAS ---
+    function updateClock() {
+        const now = new Date();
+        document.getElementById('sb-clock').innerText = now.toLocaleTimeString('sk-SK', {hour:'2-digit', minute:'2-digit'});
+        document.getElementById('sb-date').innerText = now.toLocaleDateString('sk-SK', {day:'2-digit', month:'2-digit'});
+    }
+    setInterval(updateClock, 1000); updateClock();
+
+    // --- 5. LOGIKA: STOPKY ---
+    let seconds = 0, interval = null, isRunning = false;
+    const dispStopwatch = document.getElementById('sb-stopwatch');
+    const btnAction = document.getElementById('sb-btn-action');
+
+    function fmt(s) {
+        let m = Math.floor(s/60), sec = s%60;
+        return (m<10?"0"+m:m) + ":" + (sec<10?"0"+sec:sec);
+    }
+
+    btnAction.onclick = function() {
+        if (!isRunning) {
+            isRunning = true; btnAction.innerText = "STOP"; btnAction.style.background = "#c0392b";
+            interval = setInterval(() => {
+                seconds++; dispStopwatch.innerText = fmt(seconds);
+                if(seconds>300) dispStopwatch.style.color = "#e74c3c";
+            }, 1000);
+        } else {
+            isRunning = false; btnAction.innerText = "ŠTART"; btnAction.style.background = "#27ae60";
+            clearInterval(interval);
+        }
+    };
+    document.getElementById('sb-btn-reset').onclick = function() {
+        if(isRunning) { isRunning = false; clearInterval(interval); btnAction.innerText = "ŠTART"; btnAction.style.background = "#27ae60"; }
+        seconds = 0; dispStopwatch.innerText = "00:00"; dispStopwatch.style.color = "#3498db";
+    };
+
+    // --- 6. LOGIKA: POČÍTADLO ---
+    let count = 0;
+    const dispCounter = document.getElementById('sb-counter');
+    if(localStorage.getItem('moje_skore')) { count = parseInt(localStorage.getItem('moje_skore')); dispCounter.innerText = count; }
+
+    document.getElementById('sb-cnt-plus').onclick = () => {
+        count++; dispCounter.innerText = count; localStorage.setItem('moje_skore', count); 
+    };
+    document.getElementById('sb-cnt-minus').onclick = () => {
+        if(count > 0) count--; dispCounter.innerText = count; localStorage.setItem('moje_skore', count); 
+    };
+
+    // --- 7. LOGIKA: POZNÁMKY ---
+    const notepad = document.getElementById('sb-notepad');
+    if(localStorage.getItem('moje_poznamky')) { notepad.value = localStorage.getItem('moje_poznamky'); }
+    notepad.oninput = function() { localStorage.setItem('moje_poznamky', notepad.value); };
+
+    // --- 8. LOGIKA: VTIPY (Opravená) ---
+    const moodBtn = document.getElementById('sb-mood-btn');
+    const bubble = document.getElementById('sb-bubble');
+    const bubbleText = document.getElementById('sb-bubble-text');
+
+    // Funkcia na zobrazenie nového vtipu
+    function showNewJoke(e) {
+        // Zastav propagáciu, aby document.onclick hneď neskryl bublinku
+        if(e) e.stopPropagation(); 
+
+        // Efekt tlačidla
+        moodBtn.style.transform = "rotate(360deg)";
+        setTimeout(() => moodBtn.style.transform = "rotate(0deg)", 300);
+
+        // Nový text
+        bubbleText.innerText = hlasky[Math.floor(Math.random() * hlasky.length)];
+        
+        // Zobrazenie
+        bubble.style.display = "block";
+    }
+
+    // Klik na štvorlístok
+    moodBtn.onclick = showNewJoke;
+
+    // Klik na samotnú bublinku (tiež vygeneruje nový vtip)
+    bubble.onclick = showNewJoke;
+
+    // Klik kdekoľvek inde na stránke (zatvorí bublinku)
+    document.addEventListener('click', function(event) {
+        const isClickInsideBubble = bubble.contains(event.target);
+        const isClickOnButton = moodBtn.contains(event.target);
+
+        if (!isClickInsideBubble && !isClickOnButton) {
+            bubble.style.display = "none";
+        }
+    });
+
+})();
+/* --- KONIEC --- */
 </script>
 </body>
 </html>
